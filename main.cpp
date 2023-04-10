@@ -1,6 +1,7 @@
 #include <iostream>
 #include <windows.h>
-//#include <rlutil.h>
+#include <random>
+#include <rlutil.h>
 
 using namespace std;
 
@@ -54,14 +55,14 @@ public:
     friend ostream& operator <<(ostream& os, const Bee& b) {
         return os << "This bee costed this much: " <<  b.price << "\n";
     }
-    double produce() const{
+    [[nodiscard]] double produce() const{
         if(rand() % 100 < 2)
             return rate * 2; //fiecare albina are probabilitatea de 2% de a dubla productia
         return rate;
     }
 };
 class Bees{
-    int number, curent_price;
+    int number, current_price;
     double increment, total_profit;
     Bee* ob;
 public:
@@ -69,14 +70,14 @@ public:
         number = 0;
         increment = 1.5;
         total_profit = 0;
-        curent_price = 10;
+        current_price = 10;
         ob = new Bee[1];
         ob[0] = Bee();
     }
     ~Bees() {
         delete[] ob;
     }
-    Bees(const Bees &other): number{other.number}, curent_price{other.curent_price}, increment{other.increment}{
+    Bees(const Bees &other): number{other.number}, current_price{other.current_price}, increment{other.increment}{
         total_profit = 0;
         ob = new Bee[number];
         for(int i = 0; i < number; i++) {
@@ -93,7 +94,7 @@ public:
             this->ob[i]=other.ob[i];
 
         this->number = other.number;
-        this->curent_price = other.curent_price;
+        this->current_price = other.current_price;
         this->increment = other.increment;
         this->total_profit = 0;
 
@@ -101,24 +102,24 @@ public:
     }
 
     friend ostream& operator <<(ostream& os, const Bees& b) {
-        return os << "Bees: " << b.number << "  |  (price) " << b.curent_price << "\n";
+        return os << "Bees: " << b.number << "  |  (price) " << b.current_price << "\n";
     }
-    void calculate_curent_price(){
-        curent_price = (int)(curent_price * increment);
+    void calculate_current_price(){
+        current_price = (int)(current_price * increment);
     }
     void purchase(Wallet& w){
-        if(w.request_purchase(curent_price)){
-        w.honey_jars -= curent_price;
+        if(w.request_purchase(current_price)){
+        w.honey_jars -= current_price;
 
         Bee* temp = new Bee[number + 1];
         for(int i = 0; i < number; i++) {
             temp[i] = ob[i];
         }
-        temp[number] = Bee(curent_price);
+        temp[number] = Bee(current_price);
         number++;
         delete[] ob;
         ob = temp;
-        calculate_curent_price();
+        calculate_current_price();
         }
     }
     void calculate_profit(){
@@ -163,7 +164,8 @@ public:
 };
 
 void show_screen(const Wallet& w, const Bees& b, const Hive& h){
-    system("cls"); //de reparat cu rlutil.h
+   // system("cls"); //de reparat cu rlutil.h
+    rlutil::cls();
     cout << "                          H o n e y   C l i c k e r            \n";
     cout << "[click] Left Click   |   [exit] Q   |   [bee] B   |   [hive] H \n \n";
     cout << w;
