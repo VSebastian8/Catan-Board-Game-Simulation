@@ -43,7 +43,7 @@ public:
        price = 0;
        rate = 0;
     }
-    Bee(int p){
+    explicit Bee(int p){
        rate = 0.1;  // once every 100ms - all bees have the same rate but this could change
        price = p;
     }
