@@ -1,5 +1,4 @@
 #include <iostream>
-#include <windows.h>
 #include <random>
 #include <rlutil.h>
 
@@ -56,7 +55,10 @@ public:
         return os << "This bee costed this much: " <<  b.price << "\n";
     }
     [[nodiscard]] double produce() const{
-        if(rand() % 100 < 2)
+        random_device rd;   // non-deterministic generator
+        mt19937 gen(rd());
+
+        if(gen() % 100 < 2)
             return rate * 2; //fiecare albina are probabilitatea de 2% de a dubla productia
         return rate;
     }
@@ -164,10 +166,9 @@ public:
 };
 
 void show_screen(const Wallet& w, const Bees& b, const Hive& h){
-   // system("cls"); //de reparat cu rlutil.h
     rlutil::cls();
-    cout << "                          H o n e y   C l i c k e r            \n";
-    cout << "[click] Left Click   |   [exit] Q   |   [bee] B   |   [hive] H \n \n";
+    cout << "                 H o n e y   C l i c k e r            \n";
+    cout << "[click] C   |   [exit] Q   |   [bee] B   |   [hive] H \n \n";
     cout << w;
     cout << b;
     cout << h;
@@ -177,16 +178,21 @@ int main () {
     Wallet wall;
     Bees bees;
     Hive hive;
-    Sleep(100);
+    rlutil::msleep(300);
+    int click_cooldown = 0;
 
     while(true){
-        if (GetAsyncKeyState(VK_LBUTTON)){
-            wall.click(); //click detection
+        int ch = rlutil::nb_getch(); //input de la tastatura
+        click_cooldown++; //previne spam
+        if (ch == 67 || ch == 99){ // input == C || c
+            if(click_cooldown >= 2)
+                wall.click();
+            click_cooldown = 0;
         }
-        if (GetAsyncKeyState(0x42)) {
+        if (ch == 66 || ch == 98){ // input == B || b
                 bees.purchase(wall);
         }
-        if (GetAsyncKeyState(0x48)) {
+        if (ch == 72 || ch == 104){ // input == H || h
             if (hive.request_purchase(wall))
                 hive.purchase(wall);
         }
@@ -198,9 +204,9 @@ int main () {
             Wallet::win();
             return 0;
         }
-        if (GetAsyncKeyState(0x51)){
-            return 0; //q for exit
+        if (ch == 81 || ch == 113){ // input == Q || q
+            return 0;
         }
-        Sleep(100);
+        rlutil::msleep(100);
     }
 }
