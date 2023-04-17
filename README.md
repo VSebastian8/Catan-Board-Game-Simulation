@@ -1,4 +1,4 @@
-# OOP Template
+# Tema 1 - Honey Clicker
 
 ### Tema 0
 
