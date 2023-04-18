@@ -144,6 +144,15 @@ public:
     void increase(Wallet& w) const{
         w.honey_jars += total_profit;
     }
+    [[nodiscard]] bool inactivity_check(const int counter) const{
+        if(number == 0) // daca nu avem albine
+            if(counter >= 600) { // daca a trecut 1 minut de la ultimul click
+                rlutil::setColor(rlutil::LIGHTRED);
+                std::cout << "Kicked for inactivity :(";
+                return true;
+            }
+        return false;
+    }
 };
 
 class Hive{
@@ -206,7 +215,7 @@ int main () {
 
     while(true){
         int ch = rlutil::nb_getch(); //input de la tastatura
-        click_cooldown++; //previne spam
+        click_cooldown++; //previne spam si inactivitate
         if (ch == 67 || ch == 99){ // input == C || c
             if(click_cooldown >= 2)
                 wall.click();
@@ -230,6 +239,8 @@ int main () {
         if (ch == 81 || ch == 113){ // input == Q || q
             return 0;
         }
+        if(bees.inactivity_check(click_cooldown))
+            return 0;
         rlutil::msleep(100);
     }
 }
