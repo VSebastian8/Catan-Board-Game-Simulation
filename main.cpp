@@ -2,8 +2,6 @@
 #include <random>
 #include <rlutil.h>
 
-using namespace std;
-
 class Wallet{
     double honey_jars;
 public:
@@ -11,8 +9,12 @@ public:
         honey_jars = 0;
     }
     ~Wallet() = default;
-    friend ostream& operator <<(ostream& os, const Wallet& w) {
-        return os << "Honey Jars: " << (int)(w.honey_jars) << "\n";
+    friend std::ostream& operator <<(std::ostream& os, const Wallet& w) {
+        rlutil::setColor(rlutil::YELLOW);
+        os << "Honey Jars: ";
+        rlutil::setColor(rlutil::LIGHTCYAN);
+        os << (int)(w.honey_jars) << "\n";
+        return os;
     }
     void click(){
         honey_jars++;
@@ -23,7 +25,8 @@ public:
         return false;
     }
     static void win(){
-        cout << "You are so sweet!";
+        rlutil::setColor(rlutil::LIGHTRED);
+        std::cout << "You are so sweet!";
     }
     [[nodiscard]] bool request_purchase(const int price) const{
         if(honey_jars >= price)
@@ -49,14 +52,15 @@ public:
     ~Bee() = default;
     Bee(const Bee& other) : price{other.price}, rate{other.rate}
     {
-        cout << "copy constructor";
+        std::cout << "copy constructor";
     }
-    friend ostream& operator <<(ostream& os, const Bee& b) {
+    friend std::ostream& operator <<(std::ostream& os, const Bee& b) {
         return os << "This bee costed this much: " <<  b.price << "\n";
     }
+    Bee& operator=(const Bee& other) = default;
     [[nodiscard]] double produce() const{
-        random_device rd;   // non-deterministic generator
-        mt19937 gen(rd());
+        std::random_device rd;   // non-deterministic generator
+        std::mt19937 gen(rd());
 
         if(gen() % 100 < 2)
             return rate * 2; //fiecare albina are probabilitatea de 2% de a dubla productia
@@ -102,9 +106,16 @@ public:
 
         return *this;
     }
-
-    friend ostream& operator <<(ostream& os, const Bees& b) {
-        return os << "Bees: " << b.number << "  |  (price) " << b.current_price << "\n";
+    friend std::ostream& operator <<(std::ostream& os, const Bees& b) {
+        rlutil::setColor(rlutil::YELLOW);
+        os << "Bees: ";
+        rlutil::setColor(rlutil::LIGHTCYAN);
+        os << b.number;
+        rlutil::setColor(rlutil::YELLOW);
+        os << "   |  (price) ";
+        rlutil::setColor(rlutil::LIGHTCYAN);
+        os << b.current_price << "\n";
+        return os;
     }
     void calculate_current_price(){
         current_price = (int)(current_price * increment);
@@ -146,8 +157,17 @@ public:
         profit = 0.5;
     }
     ~Hive() = default;
-    friend ostream& operator <<(ostream& os, const Hive& h) {
-        return os << "Hives: " << h.number << "  |  (price) " << h.price << "\n";
+    friend std::ostream& operator <<(std::ostream& os, const Hive& h) {
+        rlutil::setColor(rlutil::YELLOW);
+        os << "Hives: ";
+        rlutil::setColor(rlutil::LIGHTCYAN);
+        os << h.number;
+        rlutil::setColor(rlutil::YELLOW);
+        os << "  |  (price) ";
+        rlutil::setColor(rlutil::LIGHTCYAN);
+        os << h.price << "\n";
+        rlutil::setColor(rlutil::YELLOW);
+        return os;
     }
 
     [[nodiscard]] bool request_purchase(const Wallet& w) const{
@@ -167,11 +187,14 @@ public:
 
 void show_screen(const Wallet& w, const Bees& b, const Hive& h){
     rlutil::cls();
-    cout << "                 H o n e y   C l i c k e r            \n";
-    cout << "[click] C   |   [exit] Q   |   [bee] B   |   [hive] H \n \n";
-    cout << w;
-    cout << b;
-    cout << h;
+    rlutil::setColor(rlutil::YELLOW);
+    std::cout << "                 H o n e y   C l i c k e r            \n";
+    rlutil::setColor(rlutil::BROWN);
+    std::cout << "[click] C   |   [exit] Q   |   [bee] B   |   [hive] H \n \n";
+    rlutil::setColor(rlutil::YELLOW);
+    std::cout << w;
+    std::cout << b;
+    std::cout << h;
 }
 
 int main () {
