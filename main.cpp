@@ -9,6 +9,8 @@ public:
         honey_jars = 0;
     }
     ~Wallet() = default;
+    Wallet(const Wallet& other) = default;
+
     friend std::ostream& operator <<(std::ostream& os, const Wallet& w) {
         rlutil::setColor(rlutil::YELLOW);
         os << "Honey Jars: ";
@@ -33,8 +35,12 @@ public:
             return true;
         return false;
     }
-    friend class Bees;
-    friend class Hive;
+    void increase(const double profit){
+        honey_jars += profit;
+    }
+    void decrease(const int price){
+        honey_jars -= price;
+    }
 };
 
 class Bee{
@@ -122,17 +128,17 @@ public:
     }
     void purchase(Wallet& w){
         if(w.request_purchase(current_price)){
-        w.honey_jars -= current_price;
+            w.decrease(current_price);
 
-        Bee* temp = new Bee[number + 1];
-        for(int i = 0; i < number; i++) {
-            temp[i] = ob[i];
-        }
-        temp[number] = Bee(current_price);
-        number++;
-        delete[] ob;
-        ob = temp;
-        calculate_current_price();
+            Bee* temp = new Bee[number + 1];
+            for(int i = 0; i < number; i++) {
+                temp[i] = ob[i];
+            }
+            temp[number] = Bee(current_price);
+            number++;
+            delete[] ob;
+            ob = temp;
+            calculate_current_price();
         }
     }
     void calculate_profit(){
@@ -141,8 +147,8 @@ public:
             total_profit += ob[i].produce();
         }
     }
-    void increase(Wallet& w) const{
-        w.honey_jars += total_profit;
+    void add_to_wallet(Wallet& w) const{
+        w.increase(total_profit);
     }
     [[nodiscard]] bool inactivity_check(const int counter) const{
         if(number == 0) // daca nu avem albine
@@ -178,19 +184,15 @@ public:
         rlutil::setColor(rlutil::YELLOW);
         return os;
     }
-
-    [[nodiscard]] bool request_purchase(const Wallet& w) const{
-        if(w.honey_jars >= price)
-            return true;
-        return false;
-    }
-    void purchase(Wallet& w){
-        number++;
-        w.honey_jars -= price;
-        price = (int)(price * increment);
+    void purchase(Wallet& w) {
+        if (w.request_purchase(price)) {
+            number++;
+            w.decrease(price);
+            price = (int) (price * increment);
+        }
     }
     void produce(Wallet& w) const{
-        w.honey_jars += number * profit;
+        w.increase(number * profit);
     }
 };
 
@@ -225,11 +227,10 @@ int main () {
                 bees.purchase(wall);
         }
         if (ch == 72 || ch == 104){ // input == H || h
-            if (hive.request_purchase(wall))
                 hive.purchase(wall);
         }
         bees.calculate_profit();
-        bees.increase(wall);
+        bees.add_to_wallet(wall);
         hive.produce(wall);
         show_screen(wall, bees, hive);
         if(wall.check_win()){
