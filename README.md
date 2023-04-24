@@ -2,8 +2,8 @@
 
 ### Tema 0
 
-- [ ] Nume proiect (poate fi schimbat ulterior)
-- [ ] Scurtă descriere a temei alese, ce v-ați propus să implementați
+- [ ] Nume proiect - Honey Clicker
+- [ ] Scurtă descriere a temei alese - copie a jocului Cookie Clicker, apesi tasta 'c' pentru a mari un contor pana poti sa cumperi albine care produc miere singure 
 
 ## Tema 1
 
