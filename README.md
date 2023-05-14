@@ -1,9 +1,13 @@
 # Tema 1 - Honey Clicker
+# Tema 2 - Catran (Catan patrat)
 
 ### Tema 0
 
 - [ ] Nume proiect - Honey Clicker
 - [ ] Scurtă descriere a temei alese - copie a jocului Cookie Clicker, apesi tasta 'c' pentru a mari un contor pana poti sa cumperi albine care produc miere singure 
+
+- [ ] Nume proiect - Catran
+- [ ] Scurtă descriere a temei alese - simulare a board-game-ului Catan (cu tiles patrate in loc de hexagonale). 
 
 ## Tema 1
 
