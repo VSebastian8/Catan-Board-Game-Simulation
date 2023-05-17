@@ -23,6 +23,12 @@ public:
     Game(): e(sf::Event()), vm(sf::VideoMode(900, 900)),
             window(new sf::RenderWindow(vm, "Catran", sf::Style::Close | sf::Style::Titlebar)),
             b(Board()){}
+    Game(const Game&) = delete;
+    Game& operator=(const Game&) = delete;
+    static Game& get_game(){
+        static Game game;
+        return game;
+    }
     void run(){
         b.initialize();
         while(window->isOpen()) {
@@ -39,6 +45,8 @@ public:
         }
     }
 };
+
+auto& g = Game::get_game();
 void info_console(){
     rlutil::setColor(rlutil::YELLOW);
     std::vector<std::shared_ptr<Tile>> info_tiles = {std::make_shared<Forest>(), std::make_shared<Hill>(), std::make_shared<Pasture>(),
@@ -54,7 +62,6 @@ int main () {
 #endif
 
     info_console();
-    Game g;
     g.run();
 
     return 0;

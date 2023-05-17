@@ -34,8 +34,8 @@ void Board::initialize(){
             4, 1, 0, 5, 4,
                0, 2, 6
     };
-    int index = 0;
     if(!animation){
+        int index = 0;
         for(int j = 2; j < 5; j++)
             tiles[1][j] = tile_pointer(base_tiling[index++], 1, j);
         for(int i = 2; i < 5; i++)
