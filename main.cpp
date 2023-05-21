@@ -1,8 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include <rlutil.h>
+#define NOMINMAX
 #include <limits>
+#include <rlutil.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include "tiles.h"
