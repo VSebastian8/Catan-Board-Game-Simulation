@@ -44,6 +44,12 @@ void Board::initialize(){
         for(int j = 2; j < 5; j++)
             tiles[5][j] = tile_pointer(base_tiling[index++], 5, j);
     }
+    for(int i = 0; i < dimension; i++){
+        for(int j = 0; j < dimension; j++) {
+            tiles[i][j]->calculate_points();
+        }
+    }
+    //tiles[5][3]->parse_points();
 }
 
 std::shared_ptr<Tile> Board::tile_pointer(const int nr, int i, int j){
