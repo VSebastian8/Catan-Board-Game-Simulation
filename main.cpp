@@ -1,11 +1,10 @@
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <iostream>
 #include <vector>
 #include <memory>
-#define NOMINMAX
 #include <limits>
 #include <rlutil.h>
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
 #include "tiles.h"
 #include "board.h"
 #include "interface.h"
