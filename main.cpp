@@ -2,13 +2,7 @@
 #include <vector>
 #include <memory>
 #include <rlutil.h>
-
-#ifdef __linux__
-#include <X11/Xlib.h>
-#endif
-
 #include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include "tiles.h"
 #include "board.h"
@@ -25,6 +19,7 @@ public:
             b(Board()){}
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
+    ~Game(){delete window;}
     static Game& get_game(){
         static Game game;
         return game;
@@ -46,7 +41,6 @@ public:
     }
 };
 
-auto& g = Game::get_game();
 void info_console(){
     rlutil::setColor(rlutil::YELLOW);
     std::vector<std::shared_ptr<Tile>> info_tiles = {std::make_shared<Forest>(), std::make_shared<Hill>(), std::make_shared<Pasture>(),
@@ -57,11 +51,9 @@ void info_console(){
 }
 
 int main () {
-#ifdef __linux__
-    XInitThreads();
-#endif
-
     info_console();
+    auto& g = Game::get_game();
+
     g.run();
 
     return 0;
