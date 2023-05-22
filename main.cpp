@@ -4,7 +4,9 @@
 #include <vector>
 #include <memory>
 #include <limits>
+#include <algorithm>
 #include <rlutil.h>
+#include <random>
 #include "tiles.h"
 #include "board.h"
 #include "interface.h"
