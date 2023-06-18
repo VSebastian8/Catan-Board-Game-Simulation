@@ -57,16 +57,14 @@ void info_console(){
 void Game::show_generation(int timer) {
     sf::Text animation_text;
     sf::Font animation_font;
-    if (!animation_font.loadFromFile( "georgia bold.ttf" ))
-    {
-        std::cout << "Error loading text \n";
-        //   throw FileError("font file error");
+    if (!animation_font.loadFromFile( "georgia bold.ttf"))    {
+        rlutil::setColor(rlutil::WHITE);
+        throw font_error("georgia bold");
     }
     animation_text.setFont(animation_font);
-    // text.setOrigin(0.1f * width, 0.15f * width);
     animation_text.setString("[GENERATING TILES]");
     animation_text.setCharacterSize(24);
-    animation_text.setPosition(620,  480);
+    animation_text.setPosition(610,  480);
     animation_text.setFillColor(sf::Color(120, 230, 223 ));
 
     if (window->isOpen())

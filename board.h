@@ -1,4 +1,5 @@
 #pragma once
+#include <random>
 
 class Board{
     static int dimension;
@@ -57,7 +58,6 @@ void Board::initialize(int mode = 0){
     if(mode == 0)
         std::shuffle(dice_rolls.begin(), dice_rolls.end(), rd);
 
-
     int index1 = -1, index2 = -1;
     for(int i = 2; i < 5; i++)
         tiles[i][1] = tile_pointer(base_tiling[++index1], i, 1, dice_rolls[++index2]);
@@ -67,10 +67,22 @@ void Board::initialize(int mode = 0){
     for(int i = 2; i < 5; i++)
         tiles[i][5] = tile_pointer(base_tiling[++index1], i, 5, dice_rolls[++index2]);
 
-    for(int i = 0; i < dimension; i++){
-        for(int j = 0; j < dimension; j++) {
-            tiles[i][j]->calculate_points();
+    for(int i = 0; i < dimension; i++)
+        for(int j = 0; j < dimension; j++)
             tiles[i][j]->calculate_offset(start_from);
+
+    //mistake example:
+    //tiles[2][6] = tile_pointer(1, 2, 6, 12);
+    //tiles[2][6]->calculate_offset(start_from);
+
+    for(int i = 0; i < dimension; i++) {
+        for (int j = 0; j < dimension; j++) {
+            try {
+                tiles[i][j]->calculate_points((float) dimension - 1);
+            }
+            catch (tile_bounds &err) {
+                std::cout << err.what() << "\n";
+            }
         }
     }
 }

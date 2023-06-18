@@ -6,15 +6,19 @@
 #include <limits>
 #include <algorithm>
 #include <rlutil.h>
-#include <random>
+#include "errors.h"
 #include "tiles.h"
 #include "board.h"
 #include "interface.h"
 
 int main () {
     info_console();
-    auto& g = Game::get_game();
-    g.run();
-
+    try{
+        auto& g = Game::get_game();
+        g.run();
+    }
+    catch(font_error &err){
+        std::cout << err.what() << "\n";
+    }
     return 0;
 }

@@ -70,8 +70,9 @@ public:
         text.setFillColor(color);
         return text;
     }
-    virtual void calculate_points(){
-        // try catch sa nu fie sub 0 sau peste board_dim
+    virtual void calculate_points(float d){
+        if(x <= 0 || y <= 0 || x >= d || y >= d)
+            throw tile_bounds("(" + std::to_string((int)x) + ", " + std::to_string((int)y) + ")");
         adjacent_points = {std::pair<int, int>(x - 1, y - 1), std::pair<int, int>(x, y - 1),
                             std::pair<int, int>(x, y - 1), std::pair<int, int>(x, y)};
     }
@@ -83,10 +84,9 @@ public:
 };
 
 void Tile::initialize_text(){
-    if (!font.loadFromFile( "georgia bold.ttf" ))
-    {
-        std::cout << "Error loading text \n";
-        //   throw FileError("font file error");
+    if (!font.loadFromFile( "georgia bold.ttf" )){
+        rlutil::setColor(rlutil::WHITE);
+        throw font_error("georgia bold");
     }
     text.setFont(font);
     text.setOrigin(0.1f * width, 0.15f * width);
@@ -98,7 +98,7 @@ void Tile::initialize_text(){
 class Useless: virtual public Tile{
 public:
     explicit Useless() = default;
-    void calculate_points() override{} //nu calculam vectorul de puncte pentru desert si ocean
+    void calculate_points(float) override{} //nu calculam vectorul de puncte pentru desert si ocean
     sf::CircleShape show_disk() override{return sf::CircleShape();}
     sf::Text show_dice_value() override{return {};}
 };
