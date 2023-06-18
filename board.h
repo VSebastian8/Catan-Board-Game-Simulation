@@ -2,15 +2,14 @@
 
 class Board{
     static int dimension;
-    bool animation;
     const float tile_width;
     const sf::Vector2f start_from;
     std::vector<std::vector<std::shared_ptr<Tile>>> tiles;
     static std::vector<int> base_tiling;
     std::vector<int> dice_rolls;
 public:
-    explicit Board(bool anim = false, float tw = 100, float offx = 0, float offy = 0): animation(anim), tile_width(tw), start_from(sf::Vector2f(offx, offy)),
-                                       tiles(std::vector<std::vector<std::shared_ptr<Tile>>>(dimension, std::vector<std::shared_ptr<Tile>>(dimension))) {
+    explicit Board(float tw = 100, float offx = 0, float offy = 0): tile_width(tw), start_from(sf::Vector2f(offx, offy)),
+        tiles(std::vector<std::vector<std::shared_ptr<Tile>>>(dimension, std::vector<std::shared_ptr<Tile>>(dimension))) {
         for (int i = 0; i < dimension; i++)
             for (int j = 0; j < dimension; j++) {
                 tiles[i][j] = std::make_shared<Ocean>(i, j, tile_width);
@@ -21,6 +20,7 @@ public:
 
     void initialize(int mode);
     std::shared_ptr<Tile> tile_pointer(int nr, int i, int j, int d);
+    void animate(sf::RenderWindow* w);
     void show(sf::RenderWindow* w){
         for(int i = 0; i < dimension; i++)
             for(int j = 0; j < dimension; j++){
@@ -32,6 +32,7 @@ public:
     Board& operator |=(const Board& other);
     Board& operator =(const Board& other);
 };
+
 int Board::dimension = 7;
 std::vector<int> Board::base_tiling = {
            0, 0, 0,
@@ -56,24 +57,22 @@ void Board::initialize(int mode = 0){
     if(mode == 0)
         std::shuffle(dice_rolls.begin(), dice_rolls.end(), rd);
 
-    if(!animation){
-        int index1 = -1, index2 = -1;
-        for(int i = 2; i < 5; i++)
-            tiles[i][1] = tile_pointer(base_tiling[++index1], i, 1, dice_rolls[++index2]);
-        for(int j = 2; j < 5; j++)
-            for(int i = 1; i < 6; i++)
-                tiles[i][j] = tile_pointer(base_tiling[++index1], i, j, dice_rolls[++index2]);
-        for(int i = 2; i < 5; i++)
-            tiles[i][5] = tile_pointer(base_tiling[++index1], i, 5, dice_rolls[++index2]);
-    }
+
+    int index1 = -1, index2 = -1;
+    for(int i = 2; i < 5; i++)
+        tiles[i][1] = tile_pointer(base_tiling[++index1], i, 1, dice_rolls[++index2]);
+    for(int j = 2; j < 5; j++)
+        for(int i = 1; i < 6; i++)
+            tiles[i][j] = tile_pointer(base_tiling[++index1], i, j, dice_rolls[++index2]);
+    for(int i = 2; i < 5; i++)
+        tiles[i][5] = tile_pointer(base_tiling[++index1], i, 5, dice_rolls[++index2]);
+
     for(int i = 0; i < dimension; i++){
         for(int j = 0; j < dimension; j++) {
             tiles[i][j]->calculate_points();
             tiles[i][j]->calculate_offset(start_from);
         }
     }
-    std::cout << "Punctele vecine pentru tile(5, 3):\n";
-    tiles[5][3]->parse_points();
 }
 
 std::shared_ptr<Tile> Board::tile_pointer(const int nr, int i, int j, int d){
@@ -109,4 +108,25 @@ Board &Board::operator|=(const Board &other) {
             tiles[i][j]->calculate_offset(start_from);
         }
     return *this;
+}
+
+void Board::animate(sf::RenderWindow *w) {
+    for(int j = 0; j < dimension; j++)
+        for(int i = 0; i < dimension; i++){
+            w->clear();
+            for(int k = 0; k < j; k++){
+                for(int l = 0; l < dimension; l++){
+                    w->draw(tiles[l][k]->show());
+                    w->draw(tiles[l][k]->show_disk());
+                    w->draw(tiles[l][k]->show_dice_value());
+                }
+            }
+            for(int l = 0; l <= i; l++){
+                w->draw(tiles[l][j]->show());
+                w->draw(tiles[l][j]->show_disk());
+                w->draw(tiles[l][j]->show_dice_value());
+            }
+            w->display();
+            rlutil::msleep(60);
+        }
 }
