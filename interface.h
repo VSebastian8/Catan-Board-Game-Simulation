@@ -57,7 +57,7 @@ void info_console(){
 void Game::show_generation(int timer) {
     sf::Text animation_text;
     sf::Font animation_font;
-    if (!animation_font.loadFromFile( "assets/georgia bold.ttf" ))
+    if (!animation_font.loadFromFile( "georgia bold.ttf" ))
     {
         std::cout << "Error loading text \n";
         //   throw FileError("font file error");

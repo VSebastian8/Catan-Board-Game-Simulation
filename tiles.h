@@ -83,7 +83,7 @@ public:
 };
 
 void Tile::initialize_text(){
-    if (!font.loadFromFile( "assets/georgia bold.ttf" ))
+    if (!font.loadFromFile( "georgia bold.ttf" ))
     {
         std::cout << "Error loading text \n";
         //   throw FileError("font file error");
