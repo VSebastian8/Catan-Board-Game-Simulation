@@ -12,8 +12,10 @@
 #include "structures.h"
 #include "board.h"
 #include "interface.h"
+#include "demo.h"
 
 int main () {
+    rlutil::saveDefaultColor();
     info_console();
     try{
         auto& g = Game::get_game();

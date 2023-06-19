@@ -19,7 +19,7 @@ public:
     }
     void show_generation(int);
     void run();
-    static void simulation(int, Player&, Player&);
+    static void simulation(int, Player&, Player&, Player&);
 };
 
 void info_console(){
@@ -29,7 +29,7 @@ void info_console(){
     for(const auto &i : info_tiles)
         std::cout << *i;
     std::cout << "\n";
-    rlutil::setColor(rlutil::WHITE);
+    rlutil::resetColor();
 }
 
 void Game::run() {
@@ -42,10 +42,10 @@ void Game::run() {
     b_scored |= b_tiled2;
     b_scored2 |= b_scored;
 
-    // show_generation(10000);
+    show_generation(10000);
     b_final.animate(window);
-    Player p1("Sebi"), p2("Cristiana");
-    std::cout << p1 << p2;
+    Player p1("Ted", {4, 2, 3, 4, 5}), p2("Robin", {0, 2, 2, 5, 3}), p3("Barney", {1, 1, 1, 1, 1});
+    std::cout << p1 << p2 << p3;
 
     while(window->isOpen()) {
         time++;
@@ -58,76 +58,11 @@ void Game::run() {
         }
         window->clear();
         b_final.show(window);
-        simulation(time, p1, p2);
+        simulation(time, p1, p2, p3);
 
         window->draw(p1.show());
         window->draw(p2.show());
+        window->draw(p3.show());
         window->display();
-    }
-}
-
-void Game::simulation(const int timer, Player& p1, Player& p2){
-    if(timer == 1)
-        p1.set_turn(true);
-    if(timer == 50) {
-        p1.set_turn(false);
-        p2.set_turn(true);
-    }
-}
-
-void Game::show_generation(int timer) {
-    sf::Text animation_text;
-    sf::Font animation_font;
-    if (!animation_font.loadFromFile( "georgia bold.ttf"))    {
-        rlutil::setColor(rlutil::WHITE);
-        throw font_error("georgia bold");
-    }
-    animation_text.setFont(animation_font);
-    animation_text.setString("[GENERATING TILES]");
-    animation_text.setCharacterSize(24);
-    animation_text.setPosition(610,  480);
-    animation_text.setFillColor(sf::Color(120, 230, 223 ));
-
-    if (window->isOpen())
-    {
-        window->clear();
-        b_ocean.show(window);
-        window->draw(animation_text);
-        window->display();
-        rlutil::msleep(timer/5);
-
-        window->clear();
-        b_ocean.show(window);
-        b_tiled.show(window);
-        animation_text.setString("[SHUFFLING TILES]");
-        window->draw(animation_text);
-        window->display();
-        rlutil::msleep(timer/5);
-
-        window->clear();
-        b_ocean.show(window);
-        b_tiled2.show(window);
-        animation_text.setString("[GENERATING ROLLS]");
-        window->draw(animation_text);
-        window->display();
-        rlutil::msleep(timer/5);
-
-        window->clear();
-        b_ocean.show(window);
-        b_tiled2.show(window);
-        b_scored.show(window);
-        animation_text.setString("[SHUFFLING ROLLS]");
-        window->draw(animation_text);
-        window->display();
-        rlutil::msleep(timer/5);
-
-        window->clear();
-        b_ocean.show(window);
-        b_tiled2.show(window);
-        b_scored2.show(window);
-        animation_text.setString("[FINISHING BOARD]");
-        window->draw(animation_text);
-        window->display();
-        rlutil::msleep(timer/5);
     }
 }

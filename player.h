@@ -1,5 +1,6 @@
 #pragma once
 
+class Structure;
 class Player{
     static int player_count;
     static std::vector<sf::Color> player_colors;
@@ -10,8 +11,9 @@ class Player{
     std::vector<int> resources; //[brick, sheep, hay, wood, rock]
     sf::Text info;
     sf::Font info_font;
+    std::vector<std::shared_ptr<Structure>> structures;
 public:
-    explicit Player(const std::string& nm = "?", const std::vector<int>& res = {3, 5, 2, 7, 3}): name(nm), player_number(++player_count),
+    explicit Player(std::string nm = "?", const std::vector<int>& res = {3, 4, 2, 7, 3}): name(std::move(nm)), player_number(++player_count),
                                                         color(player_colors[player_number]), turn(false), resources(res){}
     ~Player() = default;
     friend std::ostream& operator <<(std::ostream& out, const Player& p);
@@ -19,9 +21,19 @@ public:
     void set_turn(const bool value){
         turn = value;
     }
+    std::vector<int> get_resources(){
+        return resources;
+    }
+    void add_structure(const std::shared_ptr<Structure>& s){
+        structures.push_back(s);
+    }
+    void decrease_res(int index, int count){
+        resources[index] -= count;
+    }
 };
 int Player::player_count = 0;
-std::vector<sf::Color> Player::player_colors = {sf::Color(235, 235, 235) ,sf::Color(255, 0, 0), sf::Color(0, 255, 0), sf::Color(0, 0, 255)};
+std::vector<sf::Color> Player::player_colors = {sf::Color(227, 230, 193),
+                       sf::Color(72, 23, 179), sf::Color(212, 23, 74), sf::Color(27, 209, 164)};
 
 sf::Text Player::show() {
     if (!info_font.loadFromFile( "georgia bold.ttf")){
@@ -31,8 +43,8 @@ sf::Text Player::show() {
     info.setFont(info_font);
     info.setString("Player " + std::to_string(player_number) + " - " + name + " [brick: " + std::to_string(resources[0]) +
                    ", sheep: " + std::to_string(resources[1]) + ", hay: " + std::to_string(resources[2]) + ", wood: " + std::to_string(resources[3]) +
-                   ", rock: " + std::to_string(resources[4]) + " ]");
-    info.setPosition(100, (float)(50 + 20 * player_number));
+                   ", rock: " + std::to_string(resources[4]) + "]");
+    info.setPosition(100, (float)(50 + 25 * player_number));
     info.setCharacterSize(16);
     if(turn)
         info.setFillColor(color);
@@ -46,4 +58,5 @@ std::ostream &operator<<(std::ostream &out, const Player &p) {
     out << "Player " << p.player_number << " - " << p.name;
     out << " [brick: " << p.resources[0] << ", sheep: " << p.resources[1] << ", hay: " << p.resources[2]
         << ", wood: " << p.resources[3] << ", rock: " << p.resources[4] << "]\n";
+    return out;
 }

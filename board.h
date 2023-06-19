@@ -20,8 +20,8 @@ public:
     ~Board() = default;
 
     void initialize(int mode);
-    std::shared_ptr<Tile> tile_pointer(int nr, int i, int j, int d);
-    void animate(sf::RenderWindow* w);
+    std::shared_ptr<Tile> tile_pointer(int, int, int, int);
+    void animate(sf::RenderWindow*);
     void show(sf::RenderWindow* w){
         for(int i = 0; i < dimension; i++)
             for(int j = 0; j < dimension; j++){
@@ -30,8 +30,8 @@ public:
                 w->draw(tiles[i][j]->show_dice_value());
             }
     }
-    Board& operator |=(const Board& other);
-    Board& operator =(const Board& other);
+    Board& operator |=(const Board&);
+    Board& operator =(const Board&);
 };
 
 int Board::dimension = 7;
