@@ -112,7 +112,7 @@ public:
 class Desert: public Useless{
 public:
     explicit Desert(float x = -1, float y = -1, float w = 100, int d = 0): Tile(x, y, w, d)
-        {name = "Desert"; resource = "none"; color = sf::Color(	250, 213, 165);}
+        {name = "Desert"; resource = "none"; color = sf::Color(	227, 230, 193);}
     std::shared_ptr<Tile> clone() override
         {return std::make_shared<Desert>(*this);}
 };

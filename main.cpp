@@ -6,11 +6,13 @@
 #include <limits>
 #include <algorithm>
 #include <rlutil.h>
+
 #include "errors.h"
 #include "tiles.h"
 #include "player.h"
 #include "structures.h"
 #include "board.h"
+#include "legend.h"
 #include "interface.h"
 #include "demo.h"
 

@@ -4,12 +4,13 @@ class Game{
     sf::VideoMode vm;
     sf::RenderWindow* window;
     Board b_final, b_ocean, b_tiled, b_tiled2, b_scored, b_scored2;
+    Legend legend;
 public:
     Game(): time(0), e(sf::Event()), vm(sf::VideoMode(1500, 1000)),
             window(new sf::RenderWindow(vm, "Catran", sf::Style::Close | sf::Style::Titlebar)),
             b_final(Board(100, 400, 200)), b_ocean(Board(50, 100, 50)),
             b_tiled(Board(50, 575, 50)), b_tiled2(Board(50, 575, 50)),
-            b_scored(Board(50, 1050, 50)), b_scored2(Board(50, 1050, 50)){}
+            b_scored(Board(50, 1050, 50)), b_scored2(Board(50, 1050, 50)), legend(Legend(window)){}
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
     ~Game(){delete window;}
@@ -45,10 +46,10 @@ void Game::run() {
     show_generation(10000);
     b_final.animate(window);
     Player p1("Ted", {4, 2, 3, 4, 5}), p2("Robin", {0, 2, 2, 5, 3}), p3("Barney", {1, 1, 1, 1, 1});
-    std::cout << p1 << p2 << p3;
 
     while(window->isOpen()) {
-        time++;
+        if(time < 10000)
+            time++;
         while(window->pollEvent(e)){
             switch(e.type)
             {
@@ -59,7 +60,7 @@ void Game::run() {
         window->clear();
         b_final.show(window);
         simulation(time, p1, p2, p3);
-
+        legend.show_legend();
         window->draw(p1.show());
         window->draw(p2.show());
         window->draw(p3.show());
