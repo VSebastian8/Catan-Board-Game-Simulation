@@ -43,7 +43,7 @@ void Legend::initialize_shapes() {
     lg_road.setFillColor(sf::Color(27, 209, 164));
     lg_road.setOrigin(0, 0);
     lg_road.setSize(sf::Vector2f(60, 20));
-    lg_road.setPosition(1285, 900);
+    lg_road.setPosition(1282, 900);
 }
 void Legend::initialize_texts() {
     lg_town_text.setFont(lg_font);

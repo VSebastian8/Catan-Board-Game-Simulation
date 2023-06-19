@@ -3,7 +3,15 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
     switch(timer){
         case 1: p1.set_turn(true);
             break;
-        case 50: p1.set_turn(false); p2.set_turn(true);
+        case 50:
+            try{
+                std::shared_ptr<Structure> s = std::make_shared<Town>(5, 5);
+                s->purchase(p1);
+                p1.add_structure(s);
+            }
+            catch(resource_error& err){ std::cout << err.what() << "\n"; }
+            break;
+        case 150: p1.set_turn(false); p2.set_turn(true);
             break;
         case 200:
             try{
@@ -11,9 +19,8 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
                 s->purchase(p2);
                 p2.add_structure(s);
             }
-            catch(resource_error& err){
-                std::cout << err.what() << "\n";
-            }
+            catch(resource_error& err){ std::cout << err.what() << "\n"; }
+            catch(city_error& err){ std::cout << err.what() << "\n"; }
             break;
         case 300:
             try{
@@ -21,24 +28,30 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
                 s->purchase(p2);
                 p2.add_structure(s);
             }
-            catch(resource_error& err){
-                std::cout << err.what() << "\n";
-            }
-            catch(wrong_road_error& err){
-                std::cout << err.what() << "\n";
-            }
+            catch(resource_error& err){ std::cout << err.what() << "\n"; }
+            catch(wrong_road_error& err){ std::cout << err.what() << "\n"; }
             break;
-        case 450: p2.set_turn(false); p1.set_turn(true);
+        case 450: p2.set_turn(false); p3.set_turn(true);
+            break;
+        case 500:
+            try{
+                std::shared_ptr<Structure> s = std::make_shared<Road>(1, 2, 1, 3);
+                s->purchase(p3);
+                p3.add_structure(s);
+            }
+            catch(resource_error& err){ std::cout << err.what() << "\n"; }
+            catch(wrong_road_error& err){ std::cout << err.what() << "\n"; }
+            break;
+        case 550: p3.set_turn(false); p1.set_turn(true);
             break;
         case 600:
             try{
-                std::shared_ptr<Structure> s = std::make_shared<City>(1, 3);
+                std::shared_ptr<Structure> s = std::make_shared<City>(5, 5);
                 s->purchase(p1);
                 p1.add_structure(s);
             }
-            catch(resource_error& err){
-                std::cout << err.what() << "\n";
-            }
+            catch(resource_error& err){ std::cout << err.what() << "\n"; }
+            catch(city_error& err){ std::cout << err.what() << "\n"; }
             break;
         case 750:
             try{
@@ -53,41 +66,46 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
                 std::cout << err.what() << "\n";
             }
             break;
-        case 800: p1.set_turn(false); p3.set_turn(true);
+        case 800: p1.set_turn(false); p2.set_turn(true);
             break;
         case 900:
+            try{
+                std::shared_ptr<Structure> s = std::make_shared<Town>(4, 3);
+                s->purchase(p2);
+                p2.add_structure(s);
+            }
+            catch(resource_error& err){ std::cout << err.what() << "\n"; }
+            break;
+        case 1000: p2.set_turn(false); p3.set_turn(true);
+            break;
+        case 1050:
             try{
                 std::shared_ptr<Structure> s = std::make_shared<City>(1, 3);
                 s->purchase(p3);
                 p3.add_structure(s);
             }
-            catch(resource_error& err){
-                std::cout << err.what() << "\n";
-            }
+            catch(resource_error& err){ std::cout << err.what() << "\n"; }
+            catch(city_error& err){ std::cout << err.what() << "\n"; }
             break;
-        case 1000:
+        case 1200:
             try{
                 std::shared_ptr<Structure> s = std::make_shared<Road>(1, 3, 2, 4);
                 s->purchase(p3);
                 p3.add_structure(s);
             }
-            catch(resource_error& err){
-                std::cout << err.what() << "\n";
-            }
-            catch(wrong_road_error& err){
-                std::cout << err.what() << "\n";
-            }
+            catch(resource_error& err){ std::cout << err.what() << "\n"; }
+            catch(wrong_road_error& err){ std::cout << err.what() << "\n"; }
             break;
-        case 1100:
+        case 1300:
             try{
                 std::shared_ptr<Structure> s = std::make_shared<Town>(2, 4);
                 s->purchase(p3);
                 p3.add_structure(s);
+                rlutil::resetColor();
+                std::cout << "Total structures: ";
                 s->show_total();
             }
-            catch(resource_error& err){
-                std::cout << err.what() << "\n";
-            }
+            catch(resource_error& err){ std::cout << err.what() << "\n"; }
             break;
         default: break;
     }

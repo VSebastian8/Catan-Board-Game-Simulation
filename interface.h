@@ -45,7 +45,7 @@ void Game::run() {
 
     show_generation(10000);
     b_final.animate(window);
-    Player p1("Ted", {4, 2, 3, 4, 5}), p2("Robin", {0, 2, 2, 5, 3}), p3("Barney", {1, 1, 1, 1, 1});
+    Player p1("Ted", {5, 5, 3, 4, 5}), p2("Robin", {5, 4, 4, 5, 3}), p3("Barney", {2, 2, 1, 3, 1});
 
     while(window->isOpen()) {
         if(time < 10000)
@@ -61,6 +61,9 @@ void Game::run() {
         b_final.show(window);
         simulation(time, p1, p2, p3);
         legend.show_legend();
+        p1.show_structures(window);
+        p2.show_structures(window);
+        p3.show_structures(window);
         window->draw(p1.show());
         window->draw(p2.show());
         window->draw(p3.show());

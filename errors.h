@@ -27,3 +27,7 @@ class wrong_road_error: public game_error{
 public:
     explicit wrong_road_error(): game_error("Wrong road coordinates"){};
 };
+class city_error: public game_error{
+public:
+    explicit city_error(): game_error("City not built over town"){};
+};

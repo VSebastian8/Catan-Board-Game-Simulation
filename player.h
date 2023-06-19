@@ -30,6 +30,8 @@ public:
     void decrease_res(int index, int count){
         resources[index] -= count;
     }
+    void show_structures(sf::RenderWindow*);
+    bool town_at(float, float);
 };
 int Player::player_count = 0;
 std::vector<sf::Color> Player::player_colors = {sf::Color(227, 230, 193),
@@ -44,8 +46,8 @@ sf::Text Player::show() {
     info.setString("Player " + std::to_string(player_number) + " - " + name + " [brick: " + std::to_string(resources[0]) +
                    ", sheep: " + std::to_string(resources[1]) + ", hay: " + std::to_string(resources[2]) + ", wood: " + std::to_string(resources[3]) +
                    ", rock: " + std::to_string(resources[4]) + "]");
-    info.setPosition(100, (float)(50 + 25 * player_number));
-    info.setCharacterSize(16);
+    info.setPosition(100, (float)(50 + 30 * player_number));
+    info.setCharacterSize(20);
     if(turn)
         info.setFillColor(color);
     else
@@ -60,3 +62,4 @@ std::ostream &operator<<(std::ostream &out, const Player &p) {
         << ", wood: " << p.resources[3] << ", rock: " << p.resources[4] << "]\n";
     return out;
 }
+
