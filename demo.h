@@ -8,6 +8,12 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
                 std::shared_ptr<Structure> s = std::make_shared<Town>(5, 5);
                 s->purchase(p1);
                 p1.add_structure(s);
+                //Downcasting deoarece buildings e vector de weak_ptr<Settlement>
+                //nu retinem pointeri catre roads, doar towns/cities
+                std::shared_ptr<Settlement> sb = std::dynamic_pointer_cast<Settlement, Structure>(s);
+                //daca da fail, sb = null_ptr, nu il adaugam in buildings
+                if(sb)
+                    buildings.push_back(std::weak_ptr<Settlement>(sb));
             }
             catch(resource_error& err){ std::cout << err.what() << "\n"; }
             break;
@@ -18,6 +24,9 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
                 std::shared_ptr<Structure> s = std::make_shared<City>(4, 3);
                 s->purchase(p2);
                 p2.add_structure(s);
+                std::shared_ptr<Settlement> sb = std::dynamic_pointer_cast<Settlement, Structure>(s);
+                if(sb)
+                    buildings.push_back(std::weak_ptr<Settlement>(sb));
             }
             catch(resource_error& err){ std::cout << err.what() << "\n"; }
             catch(city_error& err){ std::cout << err.what() << "\n"; }
@@ -27,6 +36,13 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
                 std::shared_ptr<Structure> s = std::make_shared<Road>(4, 3, 4, 4);
                 s->purchase(p2);
                 p2.add_structure(s);
+                std::shared_ptr<Settlement> s2 = std::dynamic_pointer_cast<Settlement, Structure>(s);
+                if(!s2) {
+                    rlutil::resetColor();
+                    std::cout << "nu retinem *roads in buildings[]\n";
+                }
+                else
+                    buildings.push_back(std::weak_ptr<Settlement>(s2));
             }
             catch(resource_error& err){ std::cout << err.what() << "\n"; }
             catch(wrong_road_error& err){ std::cout << err.what() << "\n"; }
@@ -49,6 +65,9 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
                 std::shared_ptr<Structure> s = std::make_shared<City>(5, 5);
                 s->purchase(p1);
                 p1.add_structure(s);
+                std::shared_ptr<Settlement> sb = std::dynamic_pointer_cast<Settlement, Structure>(s);
+                if(sb)
+                    buildings.push_back(std::weak_ptr<Settlement>(sb));
             }
             catch(resource_error& err){ std::cout << err.what() << "\n"; }
             catch(city_error& err){ std::cout << err.what() << "\n"; }
@@ -73,6 +92,9 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
                 std::shared_ptr<Structure> s = std::make_shared<Town>(4, 3);
                 s->purchase(p2);
                 p2.add_structure(s);
+                std::shared_ptr<Settlement> sb = std::dynamic_pointer_cast<Settlement, Structure>(s);
+                if(sb)
+                    buildings.push_back(std::weak_ptr<Settlement>(sb));
             }
             catch(resource_error& err){ std::cout << err.what() << "\n"; }
             break;
@@ -83,6 +105,9 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
                 std::shared_ptr<Structure> s = std::make_shared<City>(1, 3);
                 s->purchase(p3);
                 p3.add_structure(s);
+                std::shared_ptr<Settlement> sb = std::dynamic_pointer_cast<Settlement, Structure>(s);
+                if(sb)
+                    buildings.push_back(std::weak_ptr<Settlement>(sb));
             }
             catch(resource_error& err){ std::cout << err.what() << "\n"; }
             catch(city_error& err){ std::cout << err.what() << "\n"; }
@@ -101,12 +126,23 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
                 std::shared_ptr<Structure> s = std::make_shared<Town>(2, 4);
                 s->purchase(p3);
                 p3.add_structure(s);
-                rlutil::resetColor();
-                std::cout << "Total structures: ";
-                s->show_total();
+                std::shared_ptr<Settlement> sb = std::dynamic_pointer_cast<Settlement, Structure>(s);
+                if(sb)
+                    buildings.push_back(std::weak_ptr<Settlement>(sb));
             }
             catch(resource_error& err){ std::cout << err.what() << "\n"; }
             break;
+        case 1500:
+            rlutil::resetColor();
+            std::cout << "Total structures: ";
+            buildings[0].lock()->show_total();
+            std::cout << "Buildings:\n";
+            for(const auto& b : buildings){
+                if(auto b2 = b.lock())
+                    b2->check();
+            }
+            break;
+
         default: break;
     }
     rlutil::resetColor();

@@ -42,6 +42,7 @@ protected:
     std::pair<float, float> place;
 public:
     Settlement(float x, float y): Structure(), place(std::pair<float, float>(x, y)){}
+    virtual void check(){std::cout << "settle\n";}
 };
 
 class Town: public Settlement{
@@ -53,6 +54,7 @@ public:
         town_mark.setPosition(400 + x * 100, 200 + y * 100);
     }
     void purchase(Player& p) final;
+    void check() final {std::cout << "town\n";}
     void show(sf::Color, sf::RenderWindow*) final;
     bool is_town(float x, float y) final { return (place.first == x && place.second == y); }
 };
@@ -66,6 +68,7 @@ public:
         city_mark.setPosition(400 + x * 100, 200 + y * 100);
     }
     void purchase(Player& p) final;
+    void check() final {std::cout << "city\n";}
     void show(sf::Color, sf::RenderWindow*) final;
 };
 

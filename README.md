@@ -8,6 +8,9 @@
 
 - [ ] Nume proiect - Catran
 - [ ] Scurtă descriere a temei alese - simulare a board-game-ului Catan (cu tiles patrate in loc de hexagonale). 
+- Avem diferite tipuri de spatii(tiles) care ofera jucatorilor diferite resurse.
+- Fiecare jucator poate cumpara structuri de 3 tipuri: oras, drum(intre 2 puncte adiacente) si cetate(plasata peste un oras, il inlocuieste pe acesta)
+- [ ] Am implementat functionalitatea pentru acest board-game si am realizat un demo cu desfasurarea a catorva runde (+consola cu informatii utile si mesaje pentru erori)
 
 ## Tema 1
 

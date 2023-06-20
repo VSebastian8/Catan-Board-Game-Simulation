@@ -4,6 +4,7 @@ class Game{
     sf::VideoMode vm;
     sf::RenderWindow* window;
     Board b_final, b_ocean, b_tiled, b_tiled2, b_scored, b_scored2;
+    std::vector<std::weak_ptr<Settlement>> buildings; //keeps track of all towns and cities
     Legend legend;
 public:
     Game(): time(0), e(sf::Event()), vm(sf::VideoMode(1500, 1000)),
@@ -20,7 +21,7 @@ public:
     }
     void show_generation(int);
     void run();
-    static void simulation(int, Player&, Player&, Player&);
+    void simulation(int, Player&, Player&, Player&);
 };
 
 void info_console(){
