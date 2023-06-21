@@ -36,17 +36,8 @@ public:
     void roll_dice();
     void dice_animation();
     void simulation(int, Player&, Player&, Player&);
+    static void calculate_win(const std::vector<Player>&);
 };
-
-void info_console(){
-    rlutil::setColor(rlutil::YELLOW);
-    std::vector<std::shared_ptr<Tile>> info_tiles = {std::make_shared<Forest>(), std::make_shared<Hill>(), std::make_shared<Pasture>(),
-                                                     std::make_shared<Field>(), std::make_shared<Mountain>(), std::make_shared<Rocky_Jungle>()};
-    for(const auto &i : info_tiles)
-        std::cout << *i;
-    std::cout << "\n";
-    rlutil::resetColor();
-}
 
 void Game::run() {
     b_tiled.initialize(1);
@@ -182,5 +173,19 @@ void Game::dice_animation() {
         case 5:
             dice_text.setString("Dice roll: " + std::to_string(dice1 + dice2));
             break;
+    }
+}
+
+void Game::calculate_win(const std::vector<Player>& players) {
+    std::vector<int> scores((int)players.size(), 0);
+    int max_score = 0;
+    for(unsigned int i = 0; i < players.size(); i++){
+        scores[i] = players[i].get_score();
+        max_score = std::max(max_score, scores[i]);
+    }
+    for(unsigned int i = 0; i < players.size(); i++){
+        if(scores[i] == max_score){
+            std::cout << players[i];
+        }
     }
 }

@@ -73,7 +73,7 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
             p3.set_turn(false); p1.set_turn(true);
             break;
         case 4100:
-            transaction(p1, "Town", {6, 4});
+            transaction(p1, "Town", {4, 6});
             break;
         case 4300:
             roll_dice();
@@ -100,9 +100,39 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
             transaction(p3, "City", {3, 2});
             break;
         case 6000:
-            p3.set_turn(false);
+            p3.set_turn(false); p1.set_turn(true);
+            break;
+        case 6100:
+            roll_dice();
+            break;
+        case 6400:
+            transaction(p1, "Road", {2, 6, 2, 5});
+            break;
+        case 6600:
+            p1.set_turn(false); p2.set_turn(true);
+            break;
+        case 6700:
+            roll_dice();
             break;
         case 7000:
+            transaction(p2, "City", {4, 3});
+            break;
+        case 7200:
+            p2.set_turn(false); p3.set_turn(true);
+            break;
+        case 7300:
+            transaction(p3, "Road", {1, 4, 2, 4});
+            break;
+        case 7500:
+            roll_dice();
+            break;
+        case 7800:
+            transaction(p3, "City", {3, 2});
+            break;
+        case 8000:
+            p3.set_turn(false);
+            break;
+        case 8500:
             rlutil::resetColor();
             std::cout << "Total structures: ";
             buildings[0].lock()->show_total();
@@ -111,6 +141,9 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
                 if(auto b2 = b.lock())
                     b2->check();
             }
+            break;
+        case 9000:
+            calculate_win({p1, p2, p3});
             break;
         default: break;
     }

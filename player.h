@@ -5,7 +5,7 @@ class Player{
     static int player_count;
     static std::vector<sf::Color> player_colors;
     std::string name;
-    int player_number;
+    int player_number, score;
     sf::Color color;
     bool turn;
     std::vector<int> resources; //[brick, sheep, hay, wood, rock]
@@ -14,18 +14,22 @@ class Player{
     std::vector<std::shared_ptr<Structure>> structures;
 public:
     explicit Player(std::string nm = "?", const std::vector<int>& res = {3, 4, 2, 7, 3}): name(std::move(nm)), player_number(++player_count),
-                                                        color(player_colors[player_number]), turn(false), resources(res){}
+                                           score(0), color(player_colors[player_number]), turn(false), resources(res){}
     ~Player() = default;
     friend std::ostream& operator <<(std::ostream& out, const Player& p);
     sf::Text show();
     void set_turn(const bool value){
         turn = value;
     }
-    std::vector<int> get_resources(){
+    std::vector<int> get_resources() const{
         return resources;
+    }
+    int get_score() const{
+        return score;
     }
     void add_structure(const std::shared_ptr<Structure>& s){
         structures.push_back(s);
+        score++;
     }
     void decrease_res(int index, int count){
         resources[index] -= count;
@@ -48,7 +52,7 @@ sf::Text Player::show() {
     info.setFont(info_font);
     info.setString("Player " + std::to_string(player_number) + " - " + name + " [brick: " + std::to_string(resources[0]) +
                    ", sheep: " + std::to_string(resources[1]) + ", hay: " + std::to_string(resources[2]) + ", wood: " + std::to_string(resources[3]) +
-                   ", rock: " + std::to_string(resources[4]) + "]");
+                   ", rock: " + std::to_string(resources[4]) + "]   Score: " + std::to_string(score));
     info.setPosition(100, (float)(50 + 30 * player_number));
     info.setCharacterSize(20);
     if(turn)
@@ -60,9 +64,8 @@ sf::Text Player::show() {
 
 std::ostream &operator<<(std::ostream &out, const Player &p) {
     rlutil::setColor(rlutil::WHITE);
-    out << "Player " << p.player_number << " - " << p.name;
-    out << " [brick: " << p.resources[0] << ", sheep: " << p.resources[1] << ", hay: " << p.resources[2]
-        << ", wood: " << p.resources[3] << ", rock: " << p.resources[4] << "]\n";
+    out << "Player " << p.player_number << " - " << p.name << "  Won!\n";
+    rlutil::resetColor();
     return out;
 }
 

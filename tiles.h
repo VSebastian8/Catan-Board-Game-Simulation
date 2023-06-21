@@ -83,7 +83,7 @@ public:
     }
     void outline_disk(int dice){
         if(dice_roll == dice) {
-            outline_timer = 300;
+            outline_timer = 280;
         }
     }
     virtual void calculate_points(float d){
