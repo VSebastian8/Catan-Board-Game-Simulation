@@ -73,7 +73,7 @@ public:
         disk.setOutlineThickness(0);
         if(outline_timer > 0){
             outline_timer--;
-            if(outline_timer < 130) {
+            if(outline_timer < 230) {
                 disk.setOutlineThickness(3);
             }
         }
@@ -83,19 +83,20 @@ public:
     }
     void outline_disk(int dice){
         if(dice_roll == dice) {
-            outline_timer = 200;
+            outline_timer = 300;
         }
     }
     virtual void calculate_points(float d){
         if(x <= 0 || y <= 0 || x >= d || y >= d)
             throw tile_bounds("(" + std::to_string((int)x) + ", " + std::to_string((int)y) + ")");
         adjacent_points = {std::pair<int, int>(x - 1, y - 1), std::pair<int, int>(x, y - 1),
-                            std::pair<int, int>(x, y - 1), std::pair<int, int>(x, y)};
+                            std::pair<int, int>(x - 1, y), std::pair<int, int>(x, y)};
     }
-    void parse_points(){
-        for(auto point : adjacent_points){
-            std::cout << point.first << " " << point.second << "\n";
-        }
+    virtual void parse_points( std::vector<std::pair<std::pair<int, int>, std::string>>& data, int& dice){
+        if(dice_roll == dice)
+            for(auto point : adjacent_points){
+                data.emplace_back(point, resource);
+            }
     }
 };
 
@@ -174,6 +175,13 @@ public:
         {name = "Rocky Jungle"; color = sf::Color(85, 180, 159);}
     void print() const override{
         std::cout << name << " gives you: " << resource << " + " << resource2 << "\n";
+    }
+    void parse_points( std::vector<std::pair<std::pair<int, int>, std::string>>& data, int& dice) override{
+        if(dice_roll == dice)
+            for(auto point : adjacent_points){
+                data.emplace_back(point, resource);
+                data.emplace_back(point, resource2);
+            }
     }
     std::shared_ptr<Tile> clone() override
         {return std::make_shared<Rocky_Jungle>(*this);}

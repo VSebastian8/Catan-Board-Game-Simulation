@@ -30,7 +30,7 @@ public:
                 w->draw(tiles[i][j]->show_dice_value());
             }
     }
-    void rolled_dice(int);
+    std::vector<std::pair<std::pair<int, int>, std::string>> rolled_dice(int);
     Board& operator |=(const Board&);
     Board& operator =(const Board&);
 };
@@ -52,7 +52,7 @@ void Board::initialize(int mode = 0){
     //mode 1 and 2 showing just tiles (normal and shuffled)
     dice_rolls = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     if(mode != 1 and mode != 2)
-        dice_rolls = {2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 8, 8, 8, 8, 9, 9, 10, 10, 11, 11};
+        dice_rolls = {2, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 10, 10, 11, 12};
     if(mode == 2)
         std::shuffle(base_tiling.begin(), base_tiling.end(), rd);
     //mode 3 not shuffled dice rolls
@@ -144,10 +144,13 @@ void Board::animate(sf::RenderWindow *w) {
         }
 }
 
-void Board::rolled_dice(int dice) {
+std::vector<std::pair<std::pair<int, int>, std::string>> Board::rolled_dice(int dice) {
+    std::vector<std::pair<std::pair<int, int>, std::string>> data;
     for(int i = 0; i < dimension; i++){
         for(int j = 0; j < dimension; j++){
             tiles[i][j]->outline_disk(dice);
+            tiles[i][j]->parse_points(data, dice);
         }
     }
+    return data;
 }

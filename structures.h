@@ -43,6 +43,23 @@ protected:
 public:
     Settlement(float x, float y): Structure(), place(std::pair<float, float>(x, y)){}
     virtual void check(){std::cout << "settle\n";}
+    void produce(int x, int y, const std::string& res){
+         if((int)place.first == x + 1 && (int)place.second == y + 1){
+            int number;
+            if(res == "brick")
+                number = 0;
+            else if(res == "sheep")
+                 number = 1;
+            else if(res == "hay")
+                 number = 2;
+            else if(res == "wood")
+                number = 3;
+            else if(res == "rock")
+                number = 4;
+            give_resource(number);
+        }
+    }
+    virtual void give_resource(const int&) = 0;
 };
 
 class Town: public Settlement{
@@ -57,6 +74,7 @@ public:
     void check() final {std::cout << "town\n";}
     void show(sf::Color, sf::RenderWindow*) final;
     bool is_town(float x, float y) final { return (place.first == x && place.second == y); }
+    void give_resource(const int& num) final { owner->increase_res(num, 1); };
 };
 
 class City: public Settlement{
@@ -70,6 +88,7 @@ public:
     void purchase(Player& p) final;
     void check() final {std::cout << "city\n";}
     void show(sf::Color, sf::RenderWindow*) final;
+    void give_resource(const int& num) final { owner->increase_res(num, 2); };
 };
 
 void Road::purchase(Player &p) {

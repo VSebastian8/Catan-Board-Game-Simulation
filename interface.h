@@ -58,9 +58,9 @@ void Game::run() {
     b_scored |= b_tiled2;
     b_scored2 |= b_scored;
 
-   // show_generation(10000);
+    show_generation(10000);
     b_final.animate(window);
-    Player p1("Ted", {5, 5, 3, 4, 5}), p2("Robin", {5, 4, 4, 5, 3}), p3("Barney", {2, 2, 1, 3, 1});
+    Player p1("Ted", {3, 3, 3, 3, 3}), p2("Robin", {3, 3, 3, 3, 3}), p3("Barney", {3, 3, 3, 3, 3});
 
     while(window->isOpen()) {
         if(time < 10000)
@@ -142,7 +142,13 @@ void Game::roll_dice() {
     dice1 = dist(rd);
     dice2 = dist(rd);
     dice_timer = 100;
-    b_final.rolled_dice(dice1 + dice2);
+    auto important_points = b_final.rolled_dice(dice1 + dice2);
+    for(const auto& element : important_points){
+        for(const auto& building : buildings)
+            if(auto b = building.lock()) {
+                b->produce(element.first.first, element.first.second, element.second);
+            }
+    }
 }
 
 void Game::dice_animation() {

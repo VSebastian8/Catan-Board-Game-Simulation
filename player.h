@@ -30,6 +30,9 @@ public:
     void decrease_res(int index, int count){
         resources[index] -= count;
     }
+    void increase_res(int index, int count){
+        resources[index] += count;
+    }
     void show_structures(sf::RenderWindow*);
     bool town_at(float, float);
 };
