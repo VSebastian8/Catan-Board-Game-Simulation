@@ -16,8 +16,10 @@ protected:
     sf::CircleShape disk;
     sf::Vector2f poz;
     sf::Color color;
+    sf::Color disk_color;
     sf::Text text;
     sf::Font font;
+    int outline_timer;
 
     virtual void print() const {
         std::cout << name << " gives you: " << resource << "\n";
@@ -26,11 +28,12 @@ public:
     explicit Tile(float x = -1, float y = -1, float w = 100, int d = 0): x(x), y(y), width(w), disk_width(w / 4),
             dim(sf::Vector2f(w, w)), disk_dim(sf::Vector2f(w / 4, w / 4)),
             dice_roll(d), x_offset(0), y_offset(0), adjacent_points(std::vector<std::pair<int, int>>()),
-            poz(sf::Vector2f(x * width,y * width)), color(sf::Color(0,0,0)){
+            poz(sf::Vector2f(x * width,y * width)), color(sf::Color(0,0,0)), disk_color(sf::Color(220, 220, 220)){
         square.setOrigin(0, 0);
         square.setSize(dim);
         disk.setOrigin(disk_dim);
         disk.setRadius(disk_width);
+        outline_timer = 0;
         initialize_text();
     } 
     virtual ~Tile() = default;
@@ -55,7 +58,7 @@ public:
         if(dice_roll < 2 || dice_roll > 12)
             return sf::CircleShape();
         disk.setPosition(x_offset + x * width + width / 2, y_offset + y * width + width / 2);
-        disk.setFillColor(sf::Color(220, 220, 220));
+        disk.setFillColor(disk_color);
         return disk;
     }
     void initialize_text();
@@ -67,8 +70,21 @@ public:
     virtual sf::Text show_dice_value(){
         if(dice_roll < 2 || dice_roll > 12)
             return {};
+        disk.setOutlineThickness(0);
+        if(outline_timer > 0){
+            outline_timer--;
+            if(outline_timer < 130) {
+                disk.setOutlineThickness(3);
+            }
+        }
+        disk.setOutlineColor(sf::Color(181, 112, 230));
         text.setFillColor(color);
         return text;
+    }
+    void outline_disk(int dice){
+        if(dice_roll == dice) {
+            outline_timer = 200;
+        }
     }
     virtual void calculate_points(float d){
         if(x <= 0 || y <= 0 || x >= d || y >= d)

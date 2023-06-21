@@ -5,13 +5,23 @@ class Game{
     sf::RenderWindow* window;
     Board b_final, b_ocean, b_tiled, b_tiled2, b_scored, b_scored2;
     std::vector<std::weak_ptr<Settlement>> buildings; //keeps track of all towns and cities
+    sf::Font dice_font;
+    sf::Text dice_text;
+    int dice1;
+    int dice2;
+    int dice_timer;
     Legend legend;
 public:
     Game(): time(0), e(sf::Event()), vm(sf::VideoMode(1500, 1000)),
             window(new sf::RenderWindow(vm, "Catran", sf::Style::Close | sf::Style::Titlebar)),
             b_final(Board(100, 400, 200)), b_ocean(Board(50, 100, 50)),
             b_tiled(Board(50, 575, 50)), b_tiled2(Board(50, 575, 50)),
-            b_scored(Board(50, 1050, 50)), b_scored2(Board(50, 1050, 50)), legend(Legend(window)){}
+            b_scored(Board(50, 1050, 50)), b_scored2(Board(50, 1050, 50)), legend(Legend(window)){
+        dice1 = 0;
+        dice2 = 0;
+        dice_timer = 0;
+        initialize_dice_text();
+    }
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
     ~Game(){delete window;}
@@ -19,9 +29,12 @@ public:
         static Game game;
         return game;
     }
+    void initialize_dice_text();
     void show_generation(int);
     void run();
     void transaction(Player&, const std::string&, const std::vector<float>&);
+    void roll_dice();
+    void dice_animation();
     void simulation(int, Player&, Player&, Player&);
 };
 
@@ -45,7 +58,7 @@ void Game::run() {
     b_scored |= b_tiled2;
     b_scored2 |= b_scored;
 
-    show_generation(10000);
+   // show_generation(10000);
     b_final.animate(window);
     Player p1("Ted", {5, 5, 3, 4, 5}), p2("Robin", {5, 4, 4, 5, 3}), p3("Barney", {2, 2, 1, 3, 1});
 
@@ -63,6 +76,9 @@ void Game::run() {
         b_final.show(window);
         simulation(time, p1, p2, p3);
         legend.show_legend();
+        dice_animation();
+        window->draw(dice_text);
+
         p1.show_structures(window);
         p2.show_structures(window);
         p3.show_structures(window);
@@ -106,4 +122,59 @@ void Game::transaction(Player &p, const std::string& type, const std::vector<flo
         std::cout << err.what() << "\n";
     }
     rlutil::resetColor();
+}
+
+void Game::initialize_dice_text() {
+    if (!dice_font.loadFromFile( "georgia bold.ttf")){
+        throw font_error("georgia bold");
+    }
+    dice_text.setFont(dice_font);
+    dice_text.setString("Dice roll: ");
+    dice_text.setPosition(700, 920);
+    dice_text.setCharacterSize(24);
+    dice_text.setFillColor(sf::Color(227, 230, 193));
+}
+
+void Game::roll_dice() {
+    static std::random_device rd;
+    std::uniform_int_distribution<int> dist(1, 6);
+
+    dice1 = dist(rd);
+    dice2 = dist(rd);
+    dice_timer = 100;
+    b_final.rolled_dice(dice1 + dice2);
+}
+
+void Game::dice_animation() {
+    if(dice_timer > 0)
+        dice_timer--;
+    switch(dice_timer){
+        case 90:
+            dice_text.setString("Dice roll: [.]");
+            break;
+        case 85:
+            dice_text.setString("Dice roll: [..]");
+            break;
+        case 80:
+            dice_text.setString("Dice roll: [...]");
+            break;
+        case 60:
+            dice_text.setString("Dice roll: " + std::to_string(dice1));
+            break;
+        case 55:
+            dice_text.setString("Dice roll: " + std::to_string(dice1) + " [.]");
+            break;
+        case 50:
+            dice_text.setString("Dice roll: " + std::to_string(dice1) + " [..]");
+            break;
+        case 45:
+            dice_text.setString("Dice roll: " + std::to_string(dice1) + " [...]");
+            break;
+        case 30:
+            dice_text.setString("Dice roll: " + std::to_string(dice1) + " " + std::to_string(dice2));
+            break;
+        case 5:
+            dice_text.setString("Dice roll: " + std::to_string(dice1 + dice2));
+            break;
+    }
 }

@@ -30,6 +30,7 @@ public:
                 w->draw(tiles[i][j]->show_dice_value());
             }
     }
+    void rolled_dice(int);
     Board& operator |=(const Board&);
     Board& operator =(const Board&);
 };
@@ -141,4 +142,12 @@ void Board::animate(sf::RenderWindow *w) {
             w->display();
             rlutil::msleep(60);
         }
+}
+
+void Board::rolled_dice(int dice) {
+    for(int i = 0; i < dimension; i++){
+        for(int j = 0; j < dimension; j++){
+            tiles[i][j]->outline_disk(dice);
+        }
+    }
 }

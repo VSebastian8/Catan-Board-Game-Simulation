@@ -10,45 +10,63 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
             p1.set_turn(false); p2.set_turn(true);
             break;
         case 200:
+            roll_dice();
+            break;
+        case 400:
             transaction(p2, "City", {4, 3});
             break;
-        case 300:
-            transaction(p2, "Road", {4, 3, 4, 4});
-            break;
-        case 450:
-            p2.set_turn(false); p3.set_turn(true);
-            break;
-        case 500:
-            transaction(p3, "Road", {1, 2, 1, 3});
-            break;
         case 550:
-            p3.set_turn(false); p1.set_turn(true);
-            break;
-        case 600:
-            transaction(p1, "City", {5, 5});
+            roll_dice();
             break;
         case 750:
-            transaction(p1, "Road", {1, 3, 2, 3});
-            break;
-        case 800:
-            p1.set_turn(false); p2.set_turn(true);
+            transaction(p2, "Road", {4, 3, 4, 4});
             break;
         case 900:
-            transaction(p2, "Town", {4, 3});
+            roll_dice();
             break;
-        case 1000:
+        case 1100:
             p2.set_turn(false); p3.set_turn(true);
             break;
-        case 1050:
-            transaction(p3, "City", {1, 3});
-            break;
-        case 1200:
-            transaction(p3, "Road", {1, 3, 2, 4});
+        case 1150:
+            transaction(p3, "Road", {1, 2, 1, 3});
             break;
         case 1300:
-            transaction(p3, "Town", {2, 4});
+            p3.set_turn(false); p1.set_turn(true);
+            break;
+        case 1350:
+            transaction(p1, "City", {5, 5});
             break;
         case 1500:
+            roll_dice();
+            break;
+        case 1700:
+            transaction(p1, "Road", {1, 3, 2, 3});
+            break;
+        case 1850:
+            p1.set_turn(false); p2.set_turn(true);
+            break;
+        case 1900:
+            transaction(p2, "Town", {4, 3});
+            break;
+        case 2100:
+            roll_dice();
+            break;
+        case 2300:
+            p2.set_turn(false); p3.set_turn(true);
+            break;
+        case 2400:
+            transaction(p3, "City", {1, 3});
+            break;
+        case 2600:
+            transaction(p3, "Road", {1, 3, 2, 4});
+            break;
+        case 2800:
+            roll_dice();
+            break;
+        case 3000:
+            transaction(p3, "Town", {2, 4});
+            break;
+        case 4000:
             rlutil::resetColor();
             std::cout << "Total structures: ";
             buildings[0].lock()->show_total();
