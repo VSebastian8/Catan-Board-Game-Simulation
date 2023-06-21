@@ -21,6 +21,7 @@ public:
     }
     void show_generation(int);
     void run();
+    void transaction(Player&, const std::string&, const std::vector<float>&);
     void simulation(int, Player&, Player&, Player&);
 };
 
@@ -70,4 +71,39 @@ void Game::run() {
         window->draw(p3.show());
         window->display();
     }
+}
+
+void Game::transaction(Player &p, const std::string& type, const std::vector<float>& list) {
+    rlutil::setColor(rlutil::LIGHTRED);
+    try{
+        std::shared_ptr<Structure> s;
+        if(type == "Town"){
+            s = std::make_shared<Town>(list[0], list[1]);
+        }
+        else if(type == "Road"){
+            s = std::make_shared<Road>(list[0], list[1], list[2], list[3]);
+        }
+        else if(type == "City"){
+            s = std::make_shared<City>(list[0], list[1]);
+        }
+        s->purchase(p);
+        //if we didn't throw any errors
+        p.add_structure(s);
+        //Downcasting deoarece buildings e vector de weak_ptr<Settlement>
+        //nu retinem pointeri catre roads, doar catre towns/cities
+        std::shared_ptr<Settlement> sb = std::dynamic_pointer_cast<Settlement, Structure>(s);
+        //daca da fail, sb = null_ptr, nu il adaugam in buildings
+        if(sb)
+            buildings.push_back(std::weak_ptr<Settlement>(sb));
+    }
+    catch(resource_error& err){
+        std::cout << err.what() << "\n";
+    }
+    catch(wrong_road_error& err){
+        std::cout << err.what() << "\n";
+    }
+    catch(city_error& err){
+        std::cout << err.what() << "\n";
+    }
+    rlutil::resetColor();
 }

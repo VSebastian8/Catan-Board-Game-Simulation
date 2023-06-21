@@ -1,136 +1,52 @@
 void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
-    rlutil::setColor(rlutil::LIGHTRED);
     switch(timer){
-        case 1: p1.set_turn(true);
+        case 1:
+            p1.set_turn(true);
             break;
         case 50:
-            try{
-                std::shared_ptr<Structure> s = std::make_shared<Town>(5, 5);
-                s->purchase(p1);
-                p1.add_structure(s);
-                //Downcasting deoarece buildings e vector de weak_ptr<Settlement>
-                //nu retinem pointeri catre roads, doar towns/cities
-                std::shared_ptr<Settlement> sb = std::dynamic_pointer_cast<Settlement, Structure>(s);
-                //daca da fail, sb = null_ptr, nu il adaugam in buildings
-                if(sb)
-                    buildings.push_back(std::weak_ptr<Settlement>(sb));
-            }
-            catch(resource_error& err){ std::cout << err.what() << "\n"; }
+            transaction(p1, "Town", {5, 5});
             break;
-        case 150: p1.set_turn(false); p2.set_turn(true);
+        case 150:
+            p1.set_turn(false); p2.set_turn(true);
             break;
         case 200:
-            try{
-                std::shared_ptr<Structure> s = std::make_shared<City>(4, 3);
-                s->purchase(p2);
-                p2.add_structure(s);
-                std::shared_ptr<Settlement> sb = std::dynamic_pointer_cast<Settlement, Structure>(s);
-                if(sb)
-                    buildings.push_back(std::weak_ptr<Settlement>(sb));
-            }
-            catch(resource_error& err){ std::cout << err.what() << "\n"; }
-            catch(city_error& err){ std::cout << err.what() << "\n"; }
+            transaction(p2, "City", {4, 3});
             break;
         case 300:
-            try{
-                std::shared_ptr<Structure> s = std::make_shared<Road>(4, 3, 4, 4);
-                s->purchase(p2);
-                p2.add_structure(s);
-                std::shared_ptr<Settlement> s2 = std::dynamic_pointer_cast<Settlement, Structure>(s);
-                if(!s2) {
-                    rlutil::resetColor();
-                    std::cout << "nu retinem *roads in buildings[]\n";
-                }
-                else
-                    buildings.push_back(std::weak_ptr<Settlement>(s2));
-            }
-            catch(resource_error& err){ std::cout << err.what() << "\n"; }
-            catch(wrong_road_error& err){ std::cout << err.what() << "\n"; }
+            transaction(p2, "Road", {4, 3, 4, 4});
             break;
-        case 450: p2.set_turn(false); p3.set_turn(true);
+        case 450:
+            p2.set_turn(false); p3.set_turn(true);
             break;
         case 500:
-            try{
-                std::shared_ptr<Structure> s = std::make_shared<Road>(1, 2, 1, 3);
-                s->purchase(p3);
-                p3.add_structure(s);
-            }
-            catch(resource_error& err){ std::cout << err.what() << "\n"; }
-            catch(wrong_road_error& err){ std::cout << err.what() << "\n"; }
+            transaction(p3, "Road", {1, 2, 1, 3});
             break;
-        case 550: p3.set_turn(false); p1.set_turn(true);
+        case 550:
+            p3.set_turn(false); p1.set_turn(true);
             break;
         case 600:
-            try{
-                std::shared_ptr<Structure> s = std::make_shared<City>(5, 5);
-                s->purchase(p1);
-                p1.add_structure(s);
-                std::shared_ptr<Settlement> sb = std::dynamic_pointer_cast<Settlement, Structure>(s);
-                if(sb)
-                    buildings.push_back(std::weak_ptr<Settlement>(sb));
-            }
-            catch(resource_error& err){ std::cout << err.what() << "\n"; }
-            catch(city_error& err){ std::cout << err.what() << "\n"; }
+            transaction(p1, "City", {5, 5});
             break;
         case 750:
-            try{
-                std::shared_ptr<Structure> s = std::make_shared<Road>(1, 3, 2, 3);
-                s->purchase(p1);
-                p1.add_structure(s);
-            }
-            catch(resource_error& err){
-                std::cout << err.what() << "\n";
-            }
-            catch(wrong_road_error& err){
-                std::cout << err.what() << "\n";
-            }
+            transaction(p1, "Road", {1, 3, 2, 3});
             break;
-        case 800: p1.set_turn(false); p2.set_turn(true);
+        case 800:
+            p1.set_turn(false); p2.set_turn(true);
             break;
         case 900:
-            try{
-                std::shared_ptr<Structure> s = std::make_shared<Town>(4, 3);
-                s->purchase(p2);
-                p2.add_structure(s);
-                std::shared_ptr<Settlement> sb = std::dynamic_pointer_cast<Settlement, Structure>(s);
-                if(sb)
-                    buildings.push_back(std::weak_ptr<Settlement>(sb));
-            }
-            catch(resource_error& err){ std::cout << err.what() << "\n"; }
+            transaction(p2, "Town", {4, 3});
             break;
-        case 1000: p2.set_turn(false); p3.set_turn(true);
+        case 1000:
+            p2.set_turn(false); p3.set_turn(true);
             break;
         case 1050:
-            try{
-                std::shared_ptr<Structure> s = std::make_shared<City>(1, 3);
-                s->purchase(p3);
-                p3.add_structure(s);
-                std::shared_ptr<Settlement> sb = std::dynamic_pointer_cast<Settlement, Structure>(s);
-                if(sb)
-                    buildings.push_back(std::weak_ptr<Settlement>(sb));
-            }
-            catch(resource_error& err){ std::cout << err.what() << "\n"; }
-            catch(city_error& err){ std::cout << err.what() << "\n"; }
+            transaction(p3, "City", {1, 3});
             break;
         case 1200:
-            try{
-                std::shared_ptr<Structure> s = std::make_shared<Road>(1, 3, 2, 4);
-                s->purchase(p3);
-                p3.add_structure(s);
-            }
-            catch(resource_error& err){ std::cout << err.what() << "\n"; }
-            catch(wrong_road_error& err){ std::cout << err.what() << "\n"; }
+            transaction(p3, "Road", {1, 3, 2, 4});
             break;
         case 1300:
-            try{
-                std::shared_ptr<Structure> s = std::make_shared<Town>(2, 4);
-                s->purchase(p3);
-                p3.add_structure(s);
-                std::shared_ptr<Settlement> sb = std::dynamic_pointer_cast<Settlement, Structure>(s);
-                if(sb)
-                    buildings.push_back(std::weak_ptr<Settlement>(sb));
-            }
-            catch(resource_error& err){ std::cout << err.what() << "\n"; }
+            transaction(p3, "Town", {2, 4});
             break;
         case 1500:
             rlutil::resetColor();
@@ -142,7 +58,6 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
                     b2->check();
             }
             break;
-
         default: break;
     }
     rlutil::resetColor();
