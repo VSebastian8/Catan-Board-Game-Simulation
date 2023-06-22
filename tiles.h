@@ -35,7 +35,12 @@ public:
         disk.setRadius(disk_width);
         outline_timer = 0;
         initialize_text();
-    } 
+    }
+    Tile(std::string name, std::string res): name(std::move(name)), resource(std::move(res)),
+        x(-1), y(-1), width(25), disk_width(8), dim(sf::Vector2f(25, 25)), disk_dim(sf::Vector2f(8, 8)),
+        dice_roll(0), x_offset(0), y_offset(0), adjacent_points(std::vector<std::pair<int, int>>()),
+        poz(sf::Vector2f(x * width,y * width)), color(sf::Color(0,0,0)),
+        disk_color(sf::Color(220, 220, 220)), outline_timer(0){}
     virtual ~Tile() = default;
     friend std::ostream& operator <<(std::ostream& out, const Tile& tile) {
         tile.print();
@@ -185,4 +190,14 @@ public:
     }
     std::shared_ptr<Tile> clone() override
         {return std::make_shared<Rocky_Jungle>(*this);}
+};
+
+class tile_factory{
+public:
+        static Tile forest() { return Tile("Forest", "wood"); }
+        static Tile hill() { return Tile("Hill", "brick"); }
+        static Tile pasture() { return Tile("Pasture", "sheep"); }
+        static Tile field() { return Tile("Field", "hay"); }
+        static Tile mountain() { return Tile("Mountain", "rock"); }
+        static Tile rocky_jungle() { return Tile("Rocky Jungle", "wood + rock"); }
 };

@@ -67,10 +67,10 @@ void Legend::initialize_texts() {
 
 void info_console(){
     rlutil::setColor(rlutil::YELLOW);
-    std::vector<std::shared_ptr<Tile>> info_tiles = {std::make_shared<Forest>(), std::make_shared<Hill>(), std::make_shared<Pasture>(),
-                                                     std::make_shared<Field>(), std::make_shared<Mountain>(), std::make_shared<Rocky_Jungle>()};
+    std::vector<Tile> info_tiles = {tile_factory::forest(), tile_factory::hill(), tile_factory::pasture(), tile_factory::field(),
+                                    tile_factory::mountain(), tile_factory::rocky_jungle()};
     for(const auto &i : info_tiles)
-        std::cout << *i;
+        std::cout << i;
     std::cout << "\n";
     rlutil::resetColor();
 }
