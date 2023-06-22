@@ -194,10 +194,20 @@ public:
 
 class tile_factory{
 public:
-        static Tile forest() { return Tile("Forest", "wood"); }
-        static Tile hill() { return Tile("Hill", "brick"); }
-        static Tile pasture() { return Tile("Pasture", "sheep"); }
-        static Tile field() { return Tile("Field", "hay"); }
-        static Tile mountain() { return Tile("Mountain", "rock"); }
-        static Tile rocky_jungle() { return Tile("Rocky Jungle", "wood + rock"); }
+        static Tile forest() { return {"Forest", "wood"}; }
+        static Tile hill() { return {"Hill", "brick"}; }
+        static Tile pasture() { return {"Pasture", "sheep"}; }
+        static Tile field() { return {"Field", "hay"}; }
+        static Tile mountain() { return {"Mountain", "rock"}; }
+        static Tile rocky_jungle() { return {"Rocky Jungle", "wood + rock"}; }
 };
+
+void info_console(){
+    rlutil::setColor(rlutil::YELLOW);
+    std::vector<Tile> info_tiles = {tile_factory::forest(), tile_factory::hill(), tile_factory::pasture(), tile_factory::field(),
+                                    tile_factory::mountain(), tile_factory::rocky_jungle()};
+    for(const auto &i : info_tiles)
+        std::cout << i;
+    std::cout << "\n";
+    rlutil::resetColor();
+}

@@ -132,7 +132,7 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
         case 8000:
             p3.set_turn(false);
             break;
-        case 8500:
+        case 8200:
             rlutil::resetColor();
             std::cout << "Total structures: ";
             buildings[0].lock()->show_total();
@@ -142,7 +142,7 @@ void Game::simulation(const int timer, Player& p1, Player& p2, Player& p3){
                     b2->check();
             }
             break;
-        case 9000:
+        case 8500:
             calculate_win({p1, p2, p3});
             break;
         default: break;

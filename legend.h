@@ -64,13 +64,3 @@ void Legend::initialize_texts() {
     lg_road_text.setCharacterSize(16);
     lg_road_text.setFillColor(sf::Color(227, 230, 193));
 }
-
-void info_console(){
-    rlutil::setColor(rlutil::YELLOW);
-    std::vector<Tile> info_tiles = {tile_factory::forest(), tile_factory::hill(), tile_factory::pasture(), tile_factory::field(),
-                                    tile_factory::mountain(), tile_factory::rocky_jungle()};
-    for(const auto &i : info_tiles)
-        std::cout << i;
-    std::cout << "\n";
-    rlutil::resetColor();
-}

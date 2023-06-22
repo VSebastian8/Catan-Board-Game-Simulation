@@ -3,37 +3,48 @@
 
 class Board{
     static int dimension;
-    const float tile_width;
-    const sf::Vector2f start_from;
+    float tile_width;
+    sf::Vector2f start_from;
     std::vector<std::vector<std::shared_ptr<Tile>>> tiles;
     static std::vector<int> base_tiling;
     std::vector<int> dice_rolls;
+    friend class board_builder;
 public:
-    explicit Board(float tw = 100, float offx = 0, float offy = 0): tile_width(tw), start_from(sf::Vector2f(offx, offy)),
-        tiles(std::vector<std::vector<std::shared_ptr<Tile>>>(dimension, std::vector<std::shared_ptr<Tile>>(dimension))) {
-        for (int i = 0; i < dimension; i++)
-            for (int j = 0; j < dimension; j++) {
-                tiles[i][j] = std::make_shared<Ocean>(i, j, tile_width);
-                tiles[i][j]->calculate_offset(start_from);
-        }
-    }
+    explicit Board(): tiles(std::vector<std::vector<std::shared_ptr<Tile>>>(dimension, std::vector<std::shared_ptr<Tile>>(dimension))) {}
     ~Board() = default;
 
+    void init_tiles(float tw);
+    void init_offset();
     void initialize(int mode);
     std::shared_ptr<Tile> tile_pointer(int, int, int, int);
     void animate(sf::RenderWindow*);
-    void show(sf::RenderWindow* w){
-        for(int i = 0; i < dimension; i++)
-            for(int j = 0; j < dimension; j++){
-                w->draw(tiles[i][j]->show());
-                w->draw(tiles[i][j]->show_disk());
-                w->draw(tiles[i][j]->show_dice_value());
-            }
-    }
+    void show(sf::RenderWindow* w);
     std::vector<std::pair<std::pair<int, int>, std::string>> rolled_dice(int);
     Board& operator |=(const Board&);
     Board& operator =(const Board&);
+    Board(const Board& other);
 };
+
+class board_builder{
+private:
+    Board b;
+public:
+    board_builder() = default;
+    board_builder& tile(float tw){
+        b.tile_width = tw;
+        b.init_tiles(tw);
+        return *this;
+    }
+    board_builder& offset(float xf, float yf){
+        b.start_from = sf::Vector2f(xf, yf);
+        b.init_offset();
+        return *this;
+    }
+    Board build(){
+        return b;
+    }
+};
+
 
 int Board::dimension = 7;
 std::vector<int> Board::base_tiling = {
@@ -43,6 +54,26 @@ std::vector<int> Board::base_tiling = {
         3, 3, 4, 4, 4,
            5, 5, 6
 };
+
+void Board::init_tiles(float tw) {
+    for (int i = 0; i < dimension; i++)
+        for (int j = 0; j < dimension; j++)
+            tiles[i][j] = std::make_shared<Ocean>(i, j, tw);
+}
+void Board::init_offset(){
+    for (int i = 0; i < dimension; i++)
+        for (int j = 0; j < dimension; j++)
+            tiles[i][j]->calculate_offset(start_from);
+}
+
+void Board::show(sf::RenderWindow *w) {
+    for(int i = 0; i < dimension; i++)
+        for(int j = 0; j < dimension; j++){
+            w->draw(tiles[i][j]->show());
+            w->draw(tiles[i][j]->show_disk());
+            w->draw(tiles[i][j]->show_dice_value());
+        }
+}
 
 void Board::initialize(int mode = 0){
     //Tiles: Forest(0), Hill(1), Pasture(2), Field(3), Mountain(4), Rocky_Jungle(5), Desert(6), Ocean(7)
@@ -123,6 +154,14 @@ Board &Board::operator|=(const Board &other) {
     return *this;
 }
 
+Board::Board(const Board &other): tile_width(other.tile_width), start_from(other.start_from), tiles(std::vector<std::vector<std::shared_ptr<Tile>>>(dimension, std::vector<std::shared_ptr<Tile>>(dimension))){
+    for(int i = 0; i < dimension; i++)
+        for(int j = 0; j < dimension; j++){
+            tiles[i][j] = (other.tiles[i][j]->clone());
+            tiles[i][j]->calculate_offset(start_from);
+        }
+}
+
 void Board::animate(sf::RenderWindow *w) {
     for(int j = 0; j < dimension; j++)
         for(int i = 0; i < dimension; i++){
@@ -154,3 +193,5 @@ std::vector<std::pair<std::pair<int, int>, std::string>> Board::rolled_dice(int 
     }
     return data;
 }
+
+

@@ -14,9 +14,12 @@ class Game{
 public:
     Game(): time(0), e(sf::Event()), vm(sf::VideoMode(1500, 1000)),
             window(new sf::RenderWindow(vm, "Catran", sf::Style::Close | sf::Style::Titlebar)),
-            b_final(Board(100, 400, 200)), b_ocean(Board(50, 100, 50)),
-            b_tiled(Board(50, 575, 50)), b_tiled2(Board(50, 575, 50)),
-            b_scored(Board(50, 1050, 50)), b_scored2(Board(50, 1050, 50)), legend(Legend(window)){
+            b_final(board_builder().tile(100).offset(400, 200).build()),
+            b_ocean(board_builder().tile(50).offset(100, 50).build()),
+            b_tiled(board_builder().tile(50).offset(575, 50).build()),
+            b_tiled2(board_builder().tile(50).offset(575, 50).build()),
+            b_scored(board_builder().tile(50).offset(1050, 50).build()),
+            b_scored2(board_builder().tile(50).offset(1050, 50).build()), legend(Legend(window)){
         dice1 = 0;
         dice2 = 0;
         dice_timer = 0;
