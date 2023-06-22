@@ -3,7 +3,7 @@
 
 class Board{
     static int dimension;
-    float tile_width;
+    float tile_width{};
     sf::Vector2f start_from;
     std::vector<std::vector<std::shared_ptr<Tile>>> tiles;
     static std::vector<int> base_tiling;
