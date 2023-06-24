@@ -208,6 +208,6 @@ void info_console(){
                                     tile_factory::mountain(), tile_factory::rocky_jungle()};
     for(const auto &i : info_tiles)
         std::cout << i;
-    std::cout << "\n";
     rlutil::resetColor();
+    std::cout << "You can pause or quit anytime by pressing P/Q\n\n";
 }

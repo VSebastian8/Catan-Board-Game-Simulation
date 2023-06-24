@@ -17,7 +17,7 @@ class Game{
     std::vector<std::pair<int, std::vector<int>>> demo_data = {};
     std::vector<std::pair<int, std::vector<int>>>::iterator instruction;
     Legend legend;
-    bool done;
+    bool done, paused;
 public:
     Game(): time(0), demo_time(0), e(sf::Event()), vm(sf::VideoMode(1500, 1000)),
             window(new sf::RenderWindow(vm, "Catran", sf::Style::Close | sf::Style::Titlebar)),
@@ -34,6 +34,7 @@ public:
         roll_speed = 400;
         transaction_speed = 200;
         done = false;
+        paused = false;
         initialize_dice_text();
     }
     Game(const Game&) = delete;
@@ -51,8 +52,9 @@ public:
     void transaction(Player&, const std::string&, const std::vector<int>&);
     void roll_dice();
     void dice_animation();
-    static void calculate_win(const std::vector<Player>&);
+    static void calculate_win(std::vector<Player>&);
     void make_turn(Player& p);
+    void check_input(int&);
 };
 
 void Game::run() {
@@ -71,6 +73,7 @@ void Game::run() {
     current_player = &players[0];
 
     init_demo();
+    int cooldown = 0;
     while(window->isOpen()) {
         while(window->pollEvent(e)){
             switch(e.type)
@@ -94,7 +97,8 @@ void Game::run() {
             window->draw(p.show());
         }
         window->display();
-        if(time < 50000)
+        check_input(cooldown);
+        if(time < 50000 && !paused)
             time++;
     }
 }
@@ -161,7 +165,7 @@ void Game::roll_dice() {
     }
 }
 
-void Game::calculate_win(const std::vector<Player>& players) {
+void Game::calculate_win(std::vector<Player>& players) {
     std::vector<int> scores((int)players.size(), 0);
     int max_score = 0;
     for(unsigned int i = 0; i < players.size(); i++){
@@ -171,6 +175,7 @@ void Game::calculate_win(const std::vector<Player>& players) {
     for(unsigned int i = 0; i < players.size(); i++){
         if(scores[i] == max_score){
             std::cout << players[i];
+            players[i].set_turn(true);
         }
     }
 }
@@ -181,4 +186,19 @@ void Game::make_turn(Player &p) {
     current_player = &p;
 }
 
-
+void Game::check_input(int& cooldown) {
+    if(cooldown > 0)
+        cooldown--;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P) && cooldown == 0){
+        paused = !paused;
+        cooldown = 20;
+        if(paused)
+            std::cout << "Paused\n";
+        else
+            std::cout << "Resumed\n";
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)){
+        std::cout << "Quited\n";
+        window->close();
+    }
+}

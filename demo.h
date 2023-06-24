@@ -74,6 +74,7 @@ void Game::simulation(const int timer){
             if(auto b2 = b.lock())
                 b2->check();
         }
+        current_player->set_turn(false);
         calculate_win(players);
         done = true;
     }

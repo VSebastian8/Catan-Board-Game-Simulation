@@ -43,6 +43,7 @@ roll
 transaction Town 2 1
 turn 1
 roll
-transaction Road 2 1 3 1
+transaction Road 5 2 6 2
+transaction Town 4 1
 turn 2
 transaction Road 1 3 1 4
