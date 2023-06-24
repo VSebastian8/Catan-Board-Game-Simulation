@@ -96,8 +96,10 @@ endif()
 ###############################################################################
 
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
-add_executable(${PROJECT_NAME} main.cpp tiles.h board.h interface.h errors.h structures.h player.h demo.h legend.h)
+add_executable(${PROJECT_NAME} main.cpp tiles.h board.h interface.h errors.h structures.h player.h demo.h legend.h animations.h)
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ext)
+INSTALL(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/assets/ DESTINATION ${INSTALL_PATH}/assets
+        FILES_MATCHING PATTERN "*.dae"  PATTERN "*.jpg")
 ###############################################################################
 
 # target definitions
@@ -144,4 +146,5 @@ endif()
 # copy binaries to "bin" folder; these are uploaded as artifacts on each release
 # update name in .github/workflows/cmake.yml:29 when changing "bin" name here
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
-
+install(DIRECTORY assets DESTINATION bin)
+#install(FILES demo.txt georgia_bold.tff DESTINATION assets)

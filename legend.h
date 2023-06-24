@@ -9,11 +9,12 @@ class Legend{
     sf::Text lg_town_text;
     sf::Text lg_city_text;
     sf::Text lg_road_text;
+    sf::Text lg_exit_text;
     void initialize_shapes();
     void initialize_texts();
 public:
     explicit Legend(sf::RenderWindow* window): window(window){
-        if (!lg_font.loadFromFile( "georgia bold.ttf")){
+        if (!lg_font.loadFromFile( "assets/georgia_bold.ttf")){
             throw font_error("georgia bold");
         }
         initialize_shapes();
@@ -26,6 +27,9 @@ public:
         window->draw(lg_town_text);
         window->draw(lg_city_text);
         window->draw(lg_road_text);
+    }
+    void show_exit(){
+        window->draw(lg_exit_text);
     }
 };
 
@@ -63,4 +67,10 @@ void Legend::initialize_texts() {
     lg_road_text.setPosition(1370, 900);
     lg_road_text.setCharacterSize(16);
     lg_road_text.setFillColor(sf::Color(227, 230, 193));
+
+    lg_exit_text.setFont(lg_font);
+    lg_exit_text.setString("The demo is done now. You can exit whenever you're ready.");
+    lg_exit_text.setPosition(380, 155);
+    lg_exit_text.setCharacterSize(24);
+    lg_exit_text.setFillColor(sf::Color(227, 230, 193));
 }

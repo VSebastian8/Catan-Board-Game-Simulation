@@ -106,7 +106,7 @@ public:
 };
 
 void Tile::initialize_text(){
-    if (!font.loadFromFile( "georgia bold.ttf" )){
+    if (!font.loadFromFile( "assets/georgia_bold.ttf" )){
         rlutil::setColor(rlutil::WHITE);
         throw font_error("georgia bold");
     }

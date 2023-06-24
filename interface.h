@@ -1,18 +1,25 @@
+#include <fstream>
 class Game{
-    int time;
+    int time, demo_time;
     sf::Event e;
     sf::VideoMode vm;
     sf::RenderWindow* window;
     Board b_final, b_ocean, b_tiled, b_tiled2, b_scored, b_scored2;
     std::vector<std::weak_ptr<Settlement>> buildings; //keeps track of all towns and cities
+    std::vector<Player> players;
+    Player* current_player = {};
     sf::Font dice_font;
     sf::Text dice_text;
     int dice1;
     int dice2;
     int dice_timer;
+    int turn_speed, roll_speed, transaction_speed;
+    std::vector<std::pair<int, std::vector<int>>> demo_data = {};
+    std::vector<std::pair<int, std::vector<int>>>::iterator instruction;
     Legend legend;
+    bool done;
 public:
-    Game(): time(0), e(sf::Event()), vm(sf::VideoMode(1500, 1000)),
+    Game(): time(0), demo_time(0), e(sf::Event()), vm(sf::VideoMode(1500, 1000)),
             window(new sf::RenderWindow(vm, "Catran", sf::Style::Close | sf::Style::Titlebar)),
             b_final(board_builder().tile(100).offset(400, 200).build()),
             b_ocean(board_builder().tile(50).offset(100, 50).build()),
@@ -23,6 +30,10 @@ public:
         dice1 = 0;
         dice2 = 0;
         dice_timer = 0;
+        turn_speed = 50;
+        roll_speed = 400;
+        transaction_speed = 200;
+        done = false;
         initialize_dice_text();
     }
     Game(const Game&) = delete;
@@ -32,14 +43,16 @@ public:
         static Game game;
         return game;
     }
+    void init_demo();
+    void simulation(int);
     void initialize_dice_text();
     void show_generation(int);
     void run();
-    void transaction(Player&, const std::string&, const std::vector<float>&);
+    void transaction(Player&, const std::string&, const std::vector<int>&);
     void roll_dice();
     void dice_animation();
-    void simulation(int, Player&, Player&, Player&);
     static void calculate_win(const std::vector<Player>&);
+    void make_turn(Player& p);
 };
 
 void Game::run() {
@@ -54,11 +67,11 @@ void Game::run() {
 
     show_generation(10000);
     b_final.animate(window);
-    Player p1("Ted", {3, 3, 3, 3, 3}), p2("Robin", {3, 3, 3, 3, 3}), p3("Barney", {3, 3, 3, 3, 3});
+    players = {Player("Ted", {3, 3, 3, 3, 3}), Player("Robin", {3, 3, 3, 3, 3}), Player("Barney", {3, 3, 3, 3, 3})};
+    current_player = &players[0];
 
+    init_demo();
     while(window->isOpen()) {
-        if(time < 10000)
-            time++;
         while(window->pollEvent(e)){
             switch(e.type)
             {
@@ -68,22 +81,25 @@ void Game::run() {
         }
         window->clear();
         b_final.show(window);
-        simulation(time, p1, p2, p3);
+        if(!done)
+            simulation(time);
+        else
+            legend.show_exit();
         legend.show_legend();
         dice_animation();
         window->draw(dice_text);
 
-        p1.show_structures(window);
-        p2.show_structures(window);
-        p3.show_structures(window);
-        window->draw(p1.show());
-        window->draw(p2.show());
-        window->draw(p3.show());
+        for(auto p : players) {
+            p.show_structures(window);
+            window->draw(p.show());
+        }
         window->display();
+        if(time < 50000)
+            time++;
     }
 }
 
-void Game::transaction(Player &p, const std::string& type, const std::vector<float>& list) {
+void Game::transaction(Player &p, const std::string& type, const std::vector<int>& list) {
     rlutil::setColor(rlutil::LIGHTRED);
     try{
         std::shared_ptr<Structure> s;
@@ -119,7 +135,7 @@ void Game::transaction(Player &p, const std::string& type, const std::vector<flo
 }
 
 void Game::initialize_dice_text() {
-    if (!dice_font.loadFromFile( "georgia bold.ttf")){
+    if (!dice_font.loadFromFile( "assets/georgia_bold.ttf")){
         throw font_error("georgia bold");
     }
     dice_text.setFont(dice_font);
@@ -145,40 +161,6 @@ void Game::roll_dice() {
     }
 }
 
-void Game::dice_animation() {
-    if(dice_timer > 0)
-        dice_timer--;
-    switch(dice_timer){
-        case 90:
-            dice_text.setString("Dice roll: [.]");
-            break;
-        case 85:
-            dice_text.setString("Dice roll: [..]");
-            break;
-        case 80:
-            dice_text.setString("Dice roll: [...]");
-            break;
-        case 60:
-            dice_text.setString("Dice roll: " + std::to_string(dice1));
-            break;
-        case 55:
-            dice_text.setString("Dice roll: " + std::to_string(dice1) + " [.]");
-            break;
-        case 50:
-            dice_text.setString("Dice roll: " + std::to_string(dice1) + " [..]");
-            break;
-        case 45:
-            dice_text.setString("Dice roll: " + std::to_string(dice1) + " [...]");
-            break;
-        case 30:
-            dice_text.setString("Dice roll: " + std::to_string(dice1) + " " + std::to_string(dice2));
-            break;
-        case 5:
-            dice_text.setString("Dice roll: " + std::to_string(dice1 + dice2));
-            break;
-    }
-}
-
 void Game::calculate_win(const std::vector<Player>& players) {
     std::vector<int> scores((int)players.size(), 0);
     int max_score = 0;
@@ -192,3 +174,11 @@ void Game::calculate_win(const std::vector<Player>& players) {
         }
     }
 }
+
+void Game::make_turn(Player &p) {
+    current_player->set_turn(false);
+    p.set_turn(true);
+    current_player = &p;
+}
+
+

@@ -162,27 +162,6 @@ Board::Board(const Board &other): tile_width(other.tile_width), start_from(other
         }
 }
 
-void Board::animate(sf::RenderWindow *w) {
-    for(int j = 0; j < dimension; j++)
-        for(int i = 0; i < dimension; i++){
-            w->clear();
-            for(int k = 0; k < j; k++){
-                for(int l = 0; l < dimension; l++){
-                    w->draw(tiles[l][k]->show());
-                    w->draw(tiles[l][k]->show_disk());
-                    w->draw(tiles[l][k]->show_dice_value());
-                }
-            }
-            for(int l = 0; l <= i; l++){
-                w->draw(tiles[l][j]->show());
-                w->draw(tiles[l][j]->show_disk());
-                w->draw(tiles[l][j]->show_dice_value());
-            }
-            w->display();
-            rlutil::msleep(60);
-        }
-}
-
 std::vector<std::pair<std::pair<int, int>, std::string>> Board::rolled_dice(int dice) {
     std::vector<std::pair<std::pair<int, int>, std::string>> data;
     for(int i = 0; i < dimension; i++){

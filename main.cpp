@@ -14,6 +14,7 @@
 #include "board.h"
 #include "legend.h"
 #include "interface.h"
+#include "animations.h"
 #include "demo.h"
 
 int main () {

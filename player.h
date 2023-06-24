@@ -45,7 +45,7 @@ std::vector<sf::Color> Player::player_colors = {sf::Color(227, 230, 193),
                        sf::Color(72, 23, 179), sf::Color(212, 23, 74), sf::Color(27, 209, 164)};
 
 sf::Text Player::show() {
-    if (!info_font.loadFromFile( "georgia bold.ttf")){
+    if (!info_font.loadFromFile( "assets/georgia_bold.ttf")){
         rlutil::setColor(rlutil::WHITE);
         throw font_error("georgia bold");
     }
@@ -53,7 +53,7 @@ sf::Text Player::show() {
     info.setString("Player " + std::to_string(player_number) + " - " + name + " [brick: " + std::to_string(resources[0]) +
                    ", sheep: " + std::to_string(resources[1]) + ", hay: " + std::to_string(resources[2]) + ", wood: " + std::to_string(resources[3]) +
                    ", rock: " + std::to_string(resources[4]) + "]   Score: " + std::to_string(score));
-    info.setPosition(100, (float)(50 + 30 * player_number));
+    info.setPosition(100, (float)(20 + 30 * player_number));
     info.setCharacterSize(20);
     if(turn)
         info.setFillColor(color);
@@ -68,4 +68,3 @@ std::ostream &operator<<(std::ostream &out, const Player &p) {
     rlutil::resetColor();
     return out;
 }
-
