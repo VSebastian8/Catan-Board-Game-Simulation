@@ -17,7 +17,7 @@ void Game::init_demo() {
             }
             else if(command == "transaction") {
                 int x1, y1;
-                string structure_type;
+                std::string structure_type;
                 data >> structure_type;
                 if(structure_type == "Town"){
                     data >> x1 >> y1;
