@@ -5,17 +5,19 @@ void Game::init_demo() {
 
     std::ifstream data;
     data.open("assets/demo.txt");
-    std::string command, structure_type;
-    int player_index, x1, y1;
+    std::string command;
     if(data.is_open()) {
         while(data >> command) {
             if (command == "roll")
                 demo_data.push_back(std::pair<int, std::vector<int>>(0, {}));
             else if(command == "turn") {
+                int player_index;
                 data >> player_index;
                 demo_data.push_back(std::pair<int, std::vector<int>>(1, {player_index}));
             }
             else if(command == "transaction") {
+                int x1, y1;
+                string structure_type;
                 data >> structure_type;
                 if(structure_type == "Town"){
                     data >> x1 >> y1;
