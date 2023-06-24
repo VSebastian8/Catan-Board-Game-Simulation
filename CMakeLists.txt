@@ -98,8 +98,7 @@ endif()
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${PROJECT_NAME} main.cpp tiles.h board.h interface.h errors.h structures.h player.h demo.h legend.h animations.h)
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ext assets)
-INSTALL(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/assets/ DESTINATION ${INSTALL_PATH}/assets
-        FILES_MATCHING PATTERN "*.dae"  PATTERN "*.jpg")
+
 ###############################################################################
 
 # target definitions
