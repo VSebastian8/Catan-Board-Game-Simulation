@@ -147,4 +147,3 @@ endif()
 # update name in .github/workflows/cmake.yml:29 when changing "bin" name here
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 install(DIRECTORY assets DESTINATION bin)
-#install(FILES demo.txt georgia_bold.tff DESTINATION assets)

@@ -6,7 +6,7 @@ void Game::init_demo() {
     std::ifstream data;
     data.open("assets/demo.txt");
     std::string command, structure_type;
-    int player_index, x1, y1, x2, y2;
+    int player_index, x1, y1;
     if(data.is_open()) {
         while(data >> command) {
             if (command == "roll")
@@ -26,6 +26,7 @@ void Game::init_demo() {
                     demo_data.push_back(std::pair<int, std::vector<int>>(3, {x1, y1}));
                 }
                 else if(structure_type == "Road"){
+                    int x2, y2;
                     data >> x1 >> y1 >> x2 >> y2;
                     demo_data.push_back(std::pair<int, std::vector<int>>(4, {x1, y1, x2, y2}));
                 }
