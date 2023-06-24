@@ -3,57 +3,57 @@
 
 ### Tema 0
 
-- [ ] Nume proiect - Honey Clicker
-- [ ] Scurtă descriere a temei alese - copie a jocului Cookie Clicker, apesi tasta 'c' pentru a mari un contor pana poti sa cumperi albine care produc miere singure 
+- [x] Nume proiect - Honey Clicker
+- [x] Scurtă descriere a temei alese - copie a jocului Cookie Clicker, apesi tasta 'c' pentru a mari un contor pana poti sa cumperi albine care produc miere singure 
 
-- [ ] Nume proiect - Catran
-- [ ] Scurtă descriere a temei alese - simulare a board-game-ului Catan (cu tiles patrate in loc de hexagonale). 
-- Avem diferite tipuri de spatii(tiles) care ofera jucatorilor diferite resurse.
-- Fiecare jucator poate cumpara structuri de 3 tipuri: oras, drum(intre 2 puncte adiacente) si cetate(plasata peste un oras, il inlocuieste pe acesta)
-- [ ] Am implementat functionalitatea pentru acest board-game si am realizat un demo cu desfasurarea a catorva runde (+consola cu informatii utile si mesaje pentru erori)
+- [x] Nume proiect - Catran
+- [x] Scurtă descriere a temei alese - simulare a board-game-ului Catan (cu tiles patrate in loc de hexagonale). 
+  - Avem diferite tipuri de spatii(tiles) care ofera jucatorilor diferite resurse.
+  - Fiecare jucator poate cumpara structuri de 3 tipuri: oras, drum(intre 2 puncte adiacente) si cetate(plasata peste un oras, il inlocuieste pe acesta)
+  - Am implementat functionalitatea pentru acest board-game si am realizat un demo cu desfasurarea a catorva runde (+consola cu informatii utile si mesaje pentru erori)
 
 ## Tema 1
 
 #### Cerințe
-- [ ] definirea a minim 3-4 clase folosind compunere
-- [ ] constructori de inițializare
-- [ ] pentru o clasă: constructor de copiere, `operator=` de copiere, destructor
+- [x] definirea a minim 3-4 clase folosind compunere
+- [x] constructori de inițializare
+- [x] pentru o clasă: constructor de copiere, `operator=` de copiere, destructor
 <!-- - [ ] pentru o altă clasă: constructor de mutare, `operator=` de mutare, destructor -->
 <!-- - [ ] pentru o altă clasă: toate cele 5 funcții membru speciale -->
-- [ ] `operator<<` pentru toate clasele pentru afișare (std::ostream)
-- [ ] cât mai multe `const` (unde este cazul)
-- [ ] implementarea a minim 3 funcții membru publice pentru funcționalități specifice temei alese
-- [ ] scenariu de utilizare a claselor definite:
+- [x] `operator<<` pentru toate clasele pentru afișare (std::ostream)
+- [x] cât mai multe `const` (unde este cazul)
+- [x] implementarea a minim 3 funcții membru publice pentru funcționalități specifice temei alese
+- [x] scenariu de utilizare a claselor definite:
   - crearea de obiecte și apelarea funcțiilor membru publice în main
   - vor fi adăugate în fișierul `tastatura.txt` exemple de date de intrare de la tastatură (dacă există)
-- [ ] tag de `git`: de exemplu `v0.1`
-- [ ] serviciu de integrare continuă (CI); exemplu: GitHub Actions
+- [x] tag de `git`: de exemplu `v0.1`
+- [x] serviciu de integrare continuă (CI); exemplu: GitHub Actions
 
 ## Tema 2
 
 #### Cerințe
-- [ ] separarea codului din clase în `.h` (sau `.hpp`) și `.cpp`
-- [ ] moșteniri
-  - [ ] clasă cu atribut de tip pointer la o clasă de bază cu derivate
-  - [ ] funcții virtuale (pure) apelate prin pointeri de bază din clasa de mai sus, constructori virtuali (clone)
+- [x] separarea codului din clase în `.h` (sau `.hpp`) și `.cpp`
+- [x] moșteniri
+  - [x] clasă cu atribut de tip pointer la o clasă de bază cu derivate
+  - [x] funcții virtuale (pure) apelate prin pointeri de bază din clasa de mai sus, constructori virtuali (clone)
     - minim o funcție virtuală va fi **specifică temei** (e.g. nu simple citiri/afișări)
-  - [ ] apelarea constructorului din clasa de bază din constructori din derivate
-  - [ ] smart pointers
-  - [ ] `dynamic_cast`
-- [ ] suprascris cc/op= pentru copieri/atribuiri corecte, copy and swap
-- [ ] excepții
-  - [ ] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim 2 clase pentru erori specifice
-  - [ ] utilizare cu sens: de exemplu, `throw` în constructor, `try`/`catch` în `main`
-- [ ] funcții și atribute `static`
-- [ ] STL
-- [ ] cât mai multe `const`
-- [ ] la sfârșit: commit separat cu adăugarea unei noi derivate fără a modifica restul codului
-- [ ] tag de `git`: de exemplu `v0.2`
+  - [x] apelarea constructorului din clasa de bază din constructori din derivate
+  - [x] smart pointers
+  - [x] `dynamic_cast`
+- [x] suprascris cc/op= pentru copieri/atribuiri corecte, copy and swap
+- [x] excepții
+  - [x] ierarhie proprie cu baza `std::exception` sau derivată din `std::exception`; minim 2 clase pentru erori specifice
+  - [x] utilizare cu sens: de exemplu, `throw` în constructor, `try`/`catch` în `main`
+- [x] funcții și atribute `static`
+- [x] STL
+- [x] cât mai multe `const`
+- [x] la sfârșit: commit separat cu adăugarea unei noi derivate fără a modifica restul codului
+- [x] tag de `git`: de exemplu `v0.2`
 
 ## Tema 3
 
 #### Cerințe
-- [ ] 2 șabloane de proiectare (design patterns)
+- [x] 2 șabloane de proiectare (design patterns)
 - [ ] o funcție șablon (template) cu sens; minim 2 instanțieri
 - [ ] o clasă șablon cu sens; minim 2 instanțieri
 <!-- - [ ] o specializare pe funcție/clasă șablon -->
@@ -61,4 +61,5 @@
 
 ## Resurse
 
-- adăugați trimiteri către resursele externe care v-au ajutat sau pe care le-ați folosit
+- Cookie Clicker: https://orteil.dashnet.org/cookieclicker/
+- Catan: https://www.catan.com/

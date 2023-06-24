@@ -60,7 +60,7 @@ void Game::simulation(const int timer){
                 demo_time += transaction_speed;
                 break;
         }
-        instruction++;
+        ++instruction;
     }
     if(instruction == demo_data.end()){
         rlutil::resetColor();
