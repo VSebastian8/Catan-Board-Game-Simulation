@@ -74,7 +74,7 @@ void Game::run() {
     init_demo();
     int cooldown = 0;
 
-    Legend2<float> lg_exit(window, "The demo is done now. You can exit whenever you're ready.", 70.8);
+    Legend2<double> lg_exit(window, "The demo is done now. You can exit whenever you're ready.", 70.8);
     lg_exit.init(380, 155);
 
     Legend2<sf::CircleShape> lg_town(window, "Town", 12.5);
