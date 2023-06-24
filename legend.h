@@ -1,76 +1,97 @@
-#pragma once
-
-class Legend{
+template<class T> class Legend2 {
     sf::RenderWindow* window;
-    sf::CircleShape lg_town;
-    sf::RectangleShape lg_city;
-    sf::RectangleShape lg_road;
-    sf::Font lg_font;
-    sf::Text lg_town_text;
-    sf::Text lg_city_text;
-    sf::Text lg_road_text;
-    sf::Text lg_exit_text;
-    void initialize_shapes();
-    void initialize_texts();
+    std::string content;
+    T shape;
+    sf::Text content_text;
+    sf::Font content_font;
 public:
-    explicit Legend(sf::RenderWindow* window): window(window){
-        if (!lg_font.loadFromFile( "assets/georgia_bold.ttf")){
+    Legend2(sf::RenderWindow* w, std::string x, T ob): window(w), content(std::move(x)), shape(ob){}
+    void init(float x, float y){
+        std::cout << shape << "\n";
+
+        if (!content_font.loadFromFile( "assets/georgia_bold.ttf")){
             throw font_error("georgia bold");
         }
-        initialize_shapes();
-        initialize_texts();
+        content_text.setString(content);
+        content_text.setFont(content_font);
+        content_text.setCharacterSize(24);
+        content_text.setFillColor(sf::Color(227, 230, 193));
+        content_text.setPosition(x, y);
     }
-    void show_legend(){
-        window->draw(lg_town);
-        window->draw(lg_city);
-        window->draw(lg_road);
-        window->draw(lg_town_text);
-        window->draw(lg_city_text);
-        window->draw(lg_road_text);
-    }
-    void show_exit(){
-        window->draw(lg_exit_text);
+    void show(){
+        window->draw(content_text);
     }
 };
 
-void Legend::initialize_shapes() {
-    lg_town.setFillColor(sf::Color(72, 23, 179));
-    lg_town.setOrigin(0, 0);
-    lg_town.setRadius(12.5);
-    lg_town.setPosition(1300, 800);
+template<> class Legend2<sf::CircleShape> {
+    sf::RenderWindow* window;
+    std::string content;
+    sf::CircleShape shape;
+    const float radius;
+    sf::Text content_text;
+    sf::Font content_font;
+public:
+    Legend2(sf::RenderWindow* w, std::string x, float rad): window(w), content(std::move(x)), radius(rad){}
+    void init(float x, float y);
+    void show();
+};
 
-    lg_city.setFillColor(sf::Color(212, 23, 74));
-    lg_city.setOrigin(0, 0);
-    lg_city.setSize(sf::Vector2f(25, 25));
-    lg_city.setPosition(1300, 850);
+void Legend2<sf::CircleShape>::init(float x, float y) {
+    shape.setFillColor(sf::Color(72, 23, 179));
+    shape.setOrigin(radius, radius);
+    shape.setRadius(radius);
+    shape.setPosition(x, y);
 
-    lg_road.setFillColor(sf::Color(27, 209, 164));
-    lg_road.setOrigin(0, 0);
-    lg_road.setSize(sf::Vector2f(60, 20));
-    lg_road.setPosition(1282, 900);
+    if (!content_font.loadFromFile( "assets/georgia_bold.ttf")){
+        throw font_error("georgia bold");
+    }
+    content_text.setString(content);
+    content_text.setFont(content_font);
+    content_text.setCharacterSize(16);
+    content_text.setOrigin(0, 8);
+    content_text.setFillColor(sf::Color(227, 230, 193));
+    content_text.setPosition(x + 50, y);
 }
-void Legend::initialize_texts() {
-    lg_town_text.setFont(lg_font);
-    lg_town_text.setString("Town");
-    lg_town_text.setPosition(1370, 800);
-    lg_town_text.setCharacterSize(16);
-    lg_town_text.setFillColor(sf::Color(227, 230, 193));
 
-    lg_city_text.setFont(lg_font);
-    lg_city_text.setString("City");
-    lg_city_text.setPosition(1370, 850);
-    lg_city_text.setCharacterSize(16);
-    lg_city_text.setFillColor(sf::Color(227, 230, 193));
+void Legend2<sf::CircleShape>::show() {
+    window->draw(shape);
+    window->draw(content_text);
+}
 
-    lg_road_text.setFont(lg_font);
-    lg_road_text.setString("Road");
-    lg_road_text.setPosition(1370, 900);
-    lg_road_text.setCharacterSize(16);
-    lg_road_text.setFillColor(sf::Color(227, 230, 193));
+template<> class Legend2<sf::RectangleShape> {
+    sf::RenderWindow* window;
+    std::string content;
+    sf::RectangleShape shape;
+    const sf::Vector2f size;
+    sf::Text content_text;
+    sf::Font content_font;
+public:
+    Legend2(sf::RenderWindow* w, std::string x, float width, float height): window(w), content(std::move(x)), size(sf::Vector2f(width, height)){}
+    void init(float, float);
+    void show();
+};
 
-    lg_exit_text.setFont(lg_font);
-    lg_exit_text.setString("The demo is done now. You can exit whenever you're ready.");
-    lg_exit_text.setPosition(380, 155);
-    lg_exit_text.setCharacterSize(24);
-    lg_exit_text.setFillColor(sf::Color(227, 230, 193));
+void Legend2<sf::RectangleShape>::init(float x, float y) {
+    if(content == "City")
+        shape.setFillColor(sf::Color(212, 23, 74));
+    else
+        shape.setFillColor(sf::Color(27, 209, 164));
+    shape.setOrigin(size.x / 2, size.y / 2);
+    shape.setSize(size);
+    shape.setPosition(x, y);
+
+    if (!content_font.loadFromFile( "assets/georgia_bold.ttf")){
+        throw font_error("georgia bold");
+    }
+    content_text.setString(content);
+    content_text.setFont(content_font);
+    content_text.setCharacterSize(16);
+    content_text.setOrigin(0, 8);
+    content_text.setFillColor(sf::Color(227, 230, 193));
+    content_text.setPosition(x + 50, y);
+}
+
+void Legend2<sf::RectangleShape>::show() {
+    window->draw(shape);
+    window->draw(content_text);
 }
