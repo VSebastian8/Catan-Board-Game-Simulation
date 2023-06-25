@@ -3,13 +3,15 @@
 
 ### Tema 0
 
-- [x] Nume proiect - Honey Clicker
+- [x] Nume proiect - **Honey Clicker**
 - [x] Scurtă descriere a temei alese - copie a jocului Cookie Clicker, apesi tasta 'c' pentru a mari un contor pana poti sa cumperi albine care produc miere singure 
 
-- [x] Nume proiect - Catran
+- [x] Nume proiect - **Catran**
 - [x] Scurtă descriere a temei alese - simulare a board-game-ului Catan (cu tiles patrate in loc de hexagonale). 
   - Avem diferite tipuri de spatii(tiles) care ofera jucatorilor diferite resurse.
   - Fiecare jucator poate cumpara structuri de 3 tipuri: oras, drum(intre 2 puncte adiacente) si cetate(plasata peste un oras, il inlocuieste pe acesta)
+  - La fiecare structura cumparata, jucatorul primeste un punct
+  - Fiecare jucator da cu zarul, iar acele tiles cu numarul de pe zaruri produc resursa lor respectiva. Toti jucatorii care au un oras(+1) sau o cetate(+2) intr-un colt acelui tile, primesc resursa.
   - Am implementat functionalitatea pentru acest board-game si am realizat un demo cu desfasurarea a catorva runde (+consola cu informatii utile si mesaje pentru erori)
 
 ## Tema 1
@@ -55,9 +57,9 @@
 #### Cerințe
 - [x] 2 șabloane de proiectare (design patterns)
 - [ ] o funcție șablon (template) cu sens; minim 2 instanțieri
-- [ ] o clasă șablon cu sens; minim 2 instanțieri
-<!-- - [ ] o specializare pe funcție/clasă șablon -->
-- [ ] tag de `git`: de exemplu `v0.3` sau `v1.0`
+- [x] o clasă șablon cu sens; minim 2 instanțieri
+  - [x] o specializare pe funcție/clasă șablon
+- [x] tag de `git`: de exemplu `v0.3` sau `v1.0`
 
 ## Resurse
 
