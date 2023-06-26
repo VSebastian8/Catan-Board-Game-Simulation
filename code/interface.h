@@ -74,16 +74,16 @@ void Game::run() {
     init_demo();
     int cooldown = 0;
 
-    Legend2<double> lg_exit(window, "The demo is done now. You can exit whenever you're ready.", 70.8);
-    lg_exit.init(380, 155);
+    Legend<double> lg_exit(window, "The demo is done now. You can exit whenever you're ready.", 70.8);
+    lg_exit.init(500, 175);
 
-    Legend2<sf::CircleShape> lg_town(window, "Town", 12.5);
+    Legend<sf::CircleShape> lg_town(window, "Town", 12.5);
     lg_town.init(1280, 800);
 
-    Legend2<sf::RectangleShape> lg_city(window, "City", 25, 25);
+    Legend<sf::RectangleShape> lg_city(window, "City", 25, 25);
     lg_city.init(1280, 850);
 
-    Legend2<sf::RectangleShape> lg_road(window, "Road", 60, 20);
+    Legend<sf::RectangleShape> lg_road(window, "Road", 60, 20);
     lg_road.init(1280, 900);
 
 
@@ -216,7 +216,7 @@ void Game::check_input(int& cooldown) {
             std::cout << "Resumed\n";
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)){
-        std::cout << "Quited\n";
+        std::cout << "Exit\n";
         window->close();
     }
 }

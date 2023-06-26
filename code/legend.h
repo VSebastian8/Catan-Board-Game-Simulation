@@ -1,47 +1,27 @@
-template<class T> class Legend2 {
+#pragma once
+
+template<class T> class Legend {
     sf::RenderWindow* window;
     std::string content;
     T shape;
+    float radius = {};
+    sf::Vector2f size;
     sf::Text content_text;
     sf::Font content_font;
 public:
-    Legend2(sf::RenderWindow* w, std::string x, T ob): window(w), content(std::move(x)), shape(ob){}
-    void init(float x, float y){
-        std::cout << shape << "\n";
-
-        if (!content_font.loadFromFile( "assets/georgia_bold.ttf")){
-            throw font_error("georgia bold");
-        }
-        content_text.setString(content);
-        content_text.setFont(content_font);
-        content_text.setCharacterSize(24);
-        content_text.setFillColor(sf::Color(227, 230, 193));
-        content_text.setPosition(x, y);
-    }
-    void show(){
-        window->draw(content_text);
-    }
-};
-
-template<> class Legend2<sf::CircleShape> {
-    sf::RenderWindow* window;
-    std::string content;
-    sf::CircleShape shape;
-    const float radius;
-    sf::Text content_text;
-    sf::Font content_font;
-public:
-    Legend2(sf::RenderWindow* w, std::string x, float rad): window(w), content(std::move(x)), radius(rad){}
+    Legend(sf::RenderWindow* w, std::string x, T ob);
+    Legend(sf::RenderWindow* w, std::string x, float rad);
+    Legend(sf::RenderWindow* w, std::string x, float width, float height);
     void init(float x, float y);
+    void init_text(float, float);
     void show();
 };
 
-void Legend2<sf::CircleShape>::init(float x, float y) {
-    shape.setFillColor(sf::Color(72, 23, 179));
-    shape.setOrigin(radius, radius);
-    shape.setRadius(radius);
-    shape.setPosition(x, y);
+template<class T> Legend<T>::Legend(sf::RenderWindow *w, std::string x, T ob): window(w), content(std::move(x)), shape(ob){}
+template<>Legend<sf::CircleShape>::Legend(sf::RenderWindow *w, std::string x, float rad): window(w), content(std::move(x)), radius(rad){}
+template<>Legend<sf::RectangleShape>::Legend(sf::RenderWindow *w, std::string x, float width, float height): window(w), content(std::move(x)), size(sf::Vector2f(width, height)){}
 
+template<class T> void Legend<T>::init_text(float x, float y) {
     if (!content_font.loadFromFile( "assets/georgia_bold.ttf")){
         throw font_error("georgia bold");
     }
@@ -50,29 +30,25 @@ void Legend2<sf::CircleShape>::init(float x, float y) {
     content_text.setCharacterSize(16);
     content_text.setOrigin(0, 8);
     content_text.setFillColor(sf::Color(227, 230, 193));
-    content_text.setPosition(x + 50, y);
+    content_text.setPosition(x, y);
 }
 
-void Legend2<sf::CircleShape>::show() {
-    window->draw(shape);
-    window->draw(content_text);
+template<class T> void Legend<T>::init(float x, float y) {
+    std::cout << shape << "\n";
+    init_text(x, y);
 }
 
-template<> class Legend2<sf::RectangleShape> {
-    sf::RenderWindow* window;
-    std::string content;
-    sf::RectangleShape shape;
-    const sf::Vector2f size;
-    sf::Text content_text;
-    sf::Font content_font;
-public:
-    Legend2(sf::RenderWindow* w, std::string x, float width, float height): window(w), content(std::move(x)), size(sf::Vector2f(width, height)){}
-    void init(float, float);
-    void show();
-};
+template<> void Legend<sf::CircleShape>::init(float x, float y) {
+    shape.setFillColor(sf::Color(72, 23, 179));
+    shape.setOrigin(radius, radius);
+    shape.setRadius(radius);
+    shape.setPosition(x, y);
 
-void Legend2<sf::RectangleShape>::init(float x, float y) {
-    if(content == "City")
+    init_text(x + 50, y);
+}
+
+template<> void Legend<sf::RectangleShape>::init(float x, float y) {
+    if(size.x == size.y)
         shape.setFillColor(sf::Color(212, 23, 74));
     else
         shape.setFillColor(sf::Color(27, 209, 164));
@@ -80,18 +56,19 @@ void Legend2<sf::RectangleShape>::init(float x, float y) {
     shape.setSize(size);
     shape.setPosition(x, y);
 
-    if (!content_font.loadFromFile( "assets/georgia_bold.ttf")){
-        throw font_error("georgia bold");
-    }
-    content_text.setString(content);
-    content_text.setFont(content_font);
-    content_text.setCharacterSize(16);
-    content_text.setOrigin(0, 8);
-    content_text.setFillColor(sf::Color(227, 230, 193));
-    content_text.setPosition(x + 50, y);
+    init_text(x + 50, y);
 }
 
-void Legend2<sf::RectangleShape>::show() {
+template<class T> void Legend<T>::show() {
+    window->draw(content_text);
+}
+
+template<> void Legend<sf::CircleShape>::show() {
+    window->draw(shape);
+    window->draw(content_text);
+}
+
+template<> void Legend<sf::RectangleShape>::show() {
     window->draw(shape);
     window->draw(content_text);
 }

@@ -19,7 +19,7 @@ void Game::show_generation(int timer) {
         b_ocean.show(window);
         window->draw(animation_text);
         window->display();
-        rlutil::msleep(timer/5);
+        sf::sleep(sf::milliseconds(timer/5));
 
         window->clear();
         b_ocean.show(window);
@@ -27,7 +27,7 @@ void Game::show_generation(int timer) {
         animation_text.setString("[SHUFFLING TILES]");
         window->draw(animation_text);
         window->display();
-        rlutil::msleep(timer/5);
+        sf::sleep(sf::milliseconds(timer/5));
 
         window->clear();
         b_ocean.show(window);
@@ -35,7 +35,7 @@ void Game::show_generation(int timer) {
         animation_text.setString("[GENERATING ROLLS]");
         window->draw(animation_text);
         window->display();
-        rlutil::msleep(timer/5);
+        sf::sleep(sf::milliseconds(timer/5));
 
         window->clear();
         b_ocean.show(window);
@@ -44,7 +44,7 @@ void Game::show_generation(int timer) {
         animation_text.setString("[SHUFFLING ROLLS]");
         window->draw(animation_text);
         window->display();
-        rlutil::msleep(timer/5);
+        sf::sleep(sf::milliseconds(timer/5));
 
         window->clear();
         b_ocean.show(window);
@@ -53,7 +53,7 @@ void Game::show_generation(int timer) {
         animation_text.setString("[FINISHING BOARD]");
         window->draw(animation_text);
         window->display();
-        rlutil::msleep(timer/5);
+        sf::sleep(sf::milliseconds(timer/5));
     }
 }
 
@@ -74,7 +74,7 @@ void Board::animate(sf::RenderWindow *w) {
                 w->draw(tiles[l][j]->show_dice_value());
             }
             w->display();
-            rlutil::msleep(60);
+            sf::sleep(sf::milliseconds(60));
         }
 }
 
