@@ -8,6 +8,7 @@ class Board{
     std::vector<std::vector<std::shared_ptr<Tile>>> tiles;
     static std::vector<int> base_tiling;
     std::vector<int> dice_rolls;
+    int anim_i = 0, anim_j = 0, board_timer = 0;
     friend class board_builder;
 public:
     explicit Board(): tiles(std::vector<std::vector<std::shared_ptr<Tile>>>(dimension, std::vector<std::shared_ptr<Tile>>(dimension))) {}
@@ -17,7 +18,7 @@ public:
     void init_offset();
     void initialize(int mode);
     std::shared_ptr<Tile> tile_pointer(int, int, int, int);
-    void animate(sf::RenderWindow*);
+    void animate(sf::RenderWindow*, bool&);
     void show(sf::RenderWindow* w);
     std::vector<std::pair<std::pair<int, int>, std::string>> rolled_dice(int);
     Board& operator |=(const Board&);

@@ -14,6 +14,9 @@ class Game{
     int dice2;
     int dice_timer;
     int turn_speed, roll_speed, transaction_speed;
+    int generation_timer = 0;
+    sf::Text animation_text;
+    sf::Font animation_font;
     std::vector<std::pair<int, std::vector<int>>> demo_data = {};
     std::vector<std::pair<int, std::vector<int>>>::iterator instruction;
     bool done, paused;
@@ -29,9 +32,9 @@ public:
         dice1 = 0;
         dice2 = 0;
         dice_timer = 0;
-        turn_speed = 50;
-        roll_speed = 400;
-        transaction_speed = 200;
+        turn_speed = 25; //(numar secunde) / 30fps
+        roll_speed = 200;
+        transaction_speed = 100;
         done = false;
         paused = false;
         initialize_dice_text();
@@ -46,7 +49,7 @@ public:
     void init_demo();
     void simulation(int);
     void initialize_dice_text();
-    void show_generation(int);
+    void show_generation(bool&);
     void run();
     void transaction(Player&, const std::string&, const std::vector<int>&);
     void roll_dice();
@@ -66,8 +69,6 @@ void Game::run() {
     b_scored |= b_tiled2;
     b_scored2 |= b_scored;
 
-    show_generation(10000);
-    b_final.animate(window);
     players = {Player("Ted", {3, 3, 3, 3, 3}), Player("Robin", {3, 3, 3, 3, 3}), Player("Barney", {3, 3, 3, 3, 3})};
     current_player = &players[0];
 
@@ -76,17 +77,25 @@ void Game::run() {
 
     Legend<double> lg_exit(window, "The demo is done now. You can exit whenever you're ready.", 70.8);
     lg_exit.init(500, 175);
-
     Legend<sf::CircleShape> lg_town(window, "Town", 12.5);
     lg_town.init(1280, 800);
-
     Legend<sf::RectangleShape> lg_city(window, "City", 25, 25);
     lg_city.init(1280, 850);
-
     Legend<sf::RectangleShape> lg_road(window, "Road", 60, 20);
     lg_road.init(1280, 900);
 
+    bool animate_board = true, animate_generation = true;
+    if (!animation_font.loadFromFile( "assets/georgia_bold.ttf"))    {
+        rlutil::setColor(rlutil::WHITE);
+        throw font_error("georgia bold");
+    }
+    animation_text.setFont(animation_font);
+    animation_text.setCharacterSize(24);
+    animation_text.setPosition(610,  480);
+    animation_text.setFillColor(sf::Color(120, 230, 223 ));
 
+    sf::Clock clock;
+    window->setFramerateLimit(30);
     while(window->isOpen()) {
         while(window->pollEvent(e)){
             switch(e.type)
@@ -95,29 +104,41 @@ void Game::run() {
                 default: break;
             }
         }
-        window->clear();
-        if(!done)
-            simulation(time);
-        else
-            lg_exit.show();
-
-        lg_town.show();
-        lg_city.show();
-        lg_road.show();
-
-        b_final.show(window);
-        dice_animation();
-        window->draw(dice_text);
-
-        for(auto p : players) {
-            p.show_structures(window);
-            window->draw(p.show());
+        if(animate_generation){
+            //-board generation
+            show_generation(animate_generation);
+            window->display();
         }
-        window->display();
+        else if(animate_board){
+            //--board animation
+            b_final.animate(window, animate_board);
+            window->display();
+        }
+        else{
+            //--demo thing
+            window->clear();
+            if(!done)
+                simulation(time);
+            else
+                lg_exit.show();
 
-        check_input(cooldown);
-        if(time < 50000 && !paused)
-            time++;
+            lg_town.show();
+            lg_city.show();
+            lg_road.show();
+
+            b_final.show(window);
+            dice_animation();
+            window->draw(dice_text);
+
+            for(auto p : players) {
+                p.show_structures(window);
+                window->draw(p.show());
+            }
+            check_input(cooldown);
+            if(time < 50000 && !paused)
+                time++;
+            window->display();
+        }
     }
 }
 
@@ -173,7 +194,7 @@ void Game::roll_dice() {
 
     dice1 = dist(rd);
     dice2 = dist(rd);
-    dice_timer = 100;
+    dice_timer = 61;
     auto important_points = b_final.rolled_dice(dice1 + dice2);
     for(const auto& element : important_points){
         for(const auto& building : buildings)
@@ -209,7 +230,7 @@ void Game::check_input(int& cooldown) {
         cooldown--;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::P) && cooldown == 0 && !done){
         paused = !paused;
-        cooldown = 20;
+        cooldown = 10;
         if(paused)
             std::cout << "Paused\n";
         else
