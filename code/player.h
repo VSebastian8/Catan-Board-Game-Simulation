@@ -38,7 +38,8 @@ public:
         resources[index] += count;
     }
     void show_structures(sf::RenderWindow*);
-    bool town_at(float, float);
+    bool town_at(int, int);
+    bool connects_to(int, int, int, int);
 };
 int Player::player_count = 0;
 std::vector<sf::Color> Player::player_colors = {sf::Color(227, 230, 193),

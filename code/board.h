@@ -46,7 +46,6 @@ public:
     }
 };
 
-
 int Board::dimension = 7;
 std::vector<int> Board::base_tiling = {
            0, 0, 0,
@@ -111,7 +110,7 @@ void Board::initialize(int mode = 0){
     for(int i = 0; i < dimension; i++) {
         for (int j = 0; j < dimension; j++) {
             try {
-                tiles[i][j]->calculate_points((float) dimension - 1);
+                tiles[i][j]->calculate_points(dimension - 1);
             }
             catch (tile_bounds &err) {
                 std::cout << err.what() << "\n";
@@ -173,5 +172,3 @@ std::vector<std::pair<std::pair<int, int>, std::string>> Board::rolled_dice(int 
     }
     return data;
 }
-
-

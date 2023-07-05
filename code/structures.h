@@ -14,7 +14,8 @@ public:
     virtual void purchase(Player&) = 0;
     static void show_total();
     virtual void show(sf::Color, sf::RenderWindow*) = 0;
-    virtual bool is_town(float, float){ return false; }
+    [[nodiscard]] virtual bool at(const int&, const int&) const = 0;
+    [[nodiscard]] virtual bool is_town() const{ return false;}
 };
 int Structure::total_structures = 0;
 void Structure::show_total() {
@@ -22,29 +23,32 @@ void Structure::show_total() {
 }
 
 class Road: public Structure{
-    std::pair<float, float> start, finish;
+    std::pair<int, int> start, finish;
     sf::RectangleShape road_mark;
 public:
-    Road(float x1, float y1, float x2, float y2): Structure(), start(std::pair<float, float>(x1, y1)), finish(std::pair<float, float>(x2, y2)){
+    Road(int x1, int y1, int x2, int y2): Structure(), start(std::pair<int, int>(x1, y1)), finish(std::pair<int, int>(x2, y2)){
         if(x1 == x2 && y1 == y2)
-            throw wrong_road_error();
+            throw weird_road();
         if(std::abs(x1 - x2) + std::abs(y1 - y2) > 1)
-            throw wrong_road_error();
+            throw weird_road();
         calculate_shape();
     }
     void purchase(Player&) final;
     void show(sf::Color, sf::RenderWindow*) final;
     void calculate_shape();
+    [[nodiscard]] bool at(const int& x, const int& y) const override{
+        return ((x == start.first && y == start.second) || (x == finish.first && y == finish.second));
+    }
 };
 
 class Settlement: public Structure{
 protected:
-    std::pair<float, float> place;
+    std::pair<int, int> place;
 public:
-    Settlement(float x, float y): Structure(), place(std::pair<float, float>(x, y)){}
+    Settlement(int x, int y): Structure(), place(std::pair<int, int>(x, y)){}
     virtual void check(){std::cout << "settle\n";}
     void produce(int x, int y, const std::string& res){
-         if((int)place.first == x + 1 && (int)place.second == y + 1){
+         if(place.first == x + 1 && place.second == y + 1){
             int number;
             if(res == "brick")
                 number = 0;
@@ -60,30 +64,35 @@ public:
         }
     }
     virtual void give_resource(const int&) = 0;
+    [[nodiscard]] bool at(const int& x, const int& y) const override{return(x == place.first && y == place.second);}
+    [[nodiscard]] bool is_near(const int& x, const int& y) const{
+        return((x == place.first && (y == place.second - 1 || y == place.second + 1)) ||
+                (y == place.second && (x == place.first - 1 || x == place.first + 1)));
+    }
 };
 
 class Town: public Settlement{
     sf::CircleShape town_mark;
 public:
-    Town(float x, float y): Settlement(x, y){
+    Town(int x, int y): Settlement(x, y){
         town_mark.setRadius(12.5);
         town_mark.setOrigin(sf::Vector2f(12.5, 12.5));
-        town_mark.setPosition(400 + x * 100, 200 + y * 100);
+        town_mark.setPosition(float(400 + x * 100), float(200 + y * 100));
     }
     void purchase(Player& p) final;
     void check() final {std::cout << "town\n";}
     void show(sf::Color, sf::RenderWindow*) final;
-    bool is_town(float x, float y) final { return (place.first == x && place.second == y); }
     void give_resource(const int& num) final { owner->increase_res(num, 1); };
+    [[nodiscard]] bool is_town() const override{ return true;}
 };
 
 class City: public Settlement{
     sf::RectangleShape city_mark;
 public:
-    City(float x, float y): Settlement(x, y){
+    City(int x, int y): Settlement(x, y){
         city_mark.setSize(sf::Vector2f(25, 25));
         city_mark.setOrigin(sf::Vector2f(12.5, 12.5));
-        city_mark.setPosition(400 + x * 100, 200 + y * 100);
+        city_mark.setPosition(float(400 + x * 100), float(200 + y * 100));
     }
     void purchase(Player& p) final;
     void check() final {std::cout << "city\n";}
@@ -93,6 +102,8 @@ public:
 
 void Road::purchase(Player &p) {
     //cost 1 brick, 1 wood
+    if(!p.connects_to(start.first, start.second, finish.first, finish.second))
+        throw unconnected_road();
     auto resources = p.get_resources();
     if(resources[0] < 1)
         throw resource_error("Road", "bricks");
@@ -129,7 +140,7 @@ void City::purchase(Player &p) {
     if(resources[4] < 3)
         throw resource_error("City", "rocks");
     if(!p.town_at(place.first, place.second))
-        throw city_error();
+        throw lonely_city();
     p.decrease_res(1, 2);
     p.decrease_res(4, 3);
     owner = &p;
@@ -143,12 +154,12 @@ void Road::calculate_shape() {
     if(start.first == finish.first) {
         road_mark.setSize(sf::Vector2f(20, 60));
         road_mark.setOrigin(sf::Vector2f(10, 30));
-        road_mark.setPosition(400 + start.first * 100, 250 + std::min(start.second, finish.second) * 100);
+        road_mark.setPosition(float(400 + start.first * 100), float(250 + std::min(start.second, finish.second) * 100));
     }
     else if(start.second == finish.second) {
         road_mark.setSize(sf::Vector2f(60, 20));
         road_mark.setOrigin(sf::Vector2f(30, 10));
-        road_mark.setPosition(450 + std::min(start.first, finish.first) * 100, 200 + finish.second * 100);
+        road_mark.setPosition(float(450 + std::min(start.first, finish.first) * 100), float(200 + finish.second * 100));
     }
 }
 
@@ -165,12 +176,20 @@ void Player::show_structures(sf::RenderWindow* window) {
         s->show(color, window);
     }
 }
-bool Player::town_at(float x, float y){
+bool Player::town_at(int x, int y){
     for (unsigned i = 0; i < structures.size(); ++i){
-        if(structures[i]->is_town(x, y)){
+        if(structures[i]->at(x, y) && structures[i]->is_town()){
             structures.erase (structures.begin() + i);
             return true;
         }
     }
     return false;
+}
+
+bool Player::connects_to(int x1, int y1, int x2, int y2) {
+    return std::any_of(structures.begin(), structures.end(), [&](auto i){return (i->at(x1, y1) || i->at(x2, y2));});
+/*  for(const auto& i : structures)
+        if(i->at(x1, y1) || i->at(x2, y2))
+            return true;
+    return false;   */
 }

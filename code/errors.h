@@ -23,11 +23,28 @@ class resource_error: public game_error{
 public:
     explicit resource_error(const std::string& str, const std::string& res): game_error("Not enough resources for " + str + ", need more " + res){};
 };
-class wrong_road_error: public game_error{
+
+class bad_placement: public game_error{
 public:
-    explicit wrong_road_error(): game_error("Wrong road coordinates"){};
+    explicit bad_placement(const char* message): game_error(message){}
 };
-class city_error: public game_error{
+class weird_road: public bad_placement{
 public:
-    explicit city_error(): game_error("City not built over town"){};
+    explicit weird_road(): bad_placement("Wrong road coordinates"){};
+};
+class unconnected_road: public bad_placement{
+public:
+    explicit unconnected_road(): bad_placement("Road doesn't attach to structure"){};
+};
+class lonely_city: public bad_placement{
+public:
+    explicit lonely_city(): bad_placement("City not built over town"){};
+};
+class spot_taken: public bad_placement{
+public:
+    explicit spot_taken(): bad_placement("Can't built town over other structures"){};
+};
+class spot_neighbour: public bad_placement{
+public:
+    explicit spot_neighbour(): bad_placement("Can't built town near other structures"){};
 };

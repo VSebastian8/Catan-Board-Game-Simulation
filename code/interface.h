@@ -51,6 +51,7 @@ public:
     void initialize_dice_text();
     void show_generation(bool&);
     void run();
+    void check_spots(const int&, const int&);
     void transaction(Player&, const std::string&, const std::vector<int>&);
     void roll_dice();
     void dice_animation();
@@ -84,7 +85,7 @@ void Game::run() {
     Legend<sf::RectangleShape> lg_road(window, "Road", 60, 20);
     lg_road.init(1280, 900);
 
-    bool animate_board = true, animate_generation = true;
+    bool animate_board = false, animate_generation = false;
     if (!animation_font.loadFromFile( "assets/georgia_bold.ttf"))    {
         rlutil::setColor(rlutil::WHITE);
         throw font_error("georgia bold");
@@ -94,7 +95,6 @@ void Game::run() {
     animation_text.setPosition(610,  480);
     animation_text.setFillColor(sf::Color(120, 230, 223 ));
 
-    sf::Clock clock;
     window->setFramerateLimit(30);
     while(window->isOpen()) {
         while(window->pollEvent(e)){
@@ -142,11 +142,40 @@ void Game::run() {
     }
 }
 
+bool on_board(const std::vector<int>& list){
+    if(list[0] < 1 || list[0] > 6 || list[1] < 1 || list[1] > 6)
+        return false;
+    if(list[0] == 1 || list[0] == 6)
+        if(list[1] == 1 || list[1] == 6)
+            return false;
+    if(list.size() == 3){
+        if(list[2] < 1 || list[2] > 6 || list[3] < 1 || list[3] > 6)
+            return false;
+        if(list[2] == 1 || list[2] == 6)
+            if(list[3] == 1 || list[3] == 6)
+                return false;
+    }
+    return true;
+}
+
+void Game::check_spots(const int& x, const int& y) {
+    for(auto const& building : buildings)
+        if (auto b = building.lock()){
+            if(b->at(x, y))
+                throw spot_taken();
+            if(b->is_near(x, y))
+                throw spot_neighbour();
+        }
+}
+
 void Game::transaction(Player &p, const std::string& type, const std::vector<int>& list) {
     rlutil::setColor(rlutil::LIGHTRED);
     try{
+        if(!on_board(list))
+            throw bad_placement("Structure coordinates outside of the board");
         std::shared_ptr<Structure> s;
         if(type == "Town"){
+            check_spots(list[0], list[1]);
             s = std::make_shared<Town>(list[0], list[1]);
         }
         else if(type == "Road"){
@@ -168,10 +197,7 @@ void Game::transaction(Player &p, const std::string& type, const std::vector<int
     catch(resource_error& err){
         std::cout << err.what() << "\n";
     }
-    catch(wrong_road_error& err){
-        std::cout << err.what() << "\n";
-    }
-    catch(city_error& err){
+    catch(bad_placement& err){
         std::cout << err.what() << "\n";
     }
     rlutil::resetColor();
@@ -241,3 +267,5 @@ void Game::check_input(int& cooldown) {
         window->close();
     }
 }
+
+
