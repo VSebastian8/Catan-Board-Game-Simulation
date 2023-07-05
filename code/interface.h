@@ -148,7 +148,7 @@ bool on_board(const std::vector<int>& list){
     if(list[0] == 1 || list[0] == 6)
         if(list[1] == 1 || list[1] == 6)
             return false;
-    if(list.size() == 3){
+    if(list.size() == 4){
         if(list[2] < 1 || list[2] > 6 || list[3] < 1 || list[3] > 6)
             return false;
         if(list[2] == 1 || list[2] == 6)
