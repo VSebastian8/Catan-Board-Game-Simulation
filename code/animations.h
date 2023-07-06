@@ -61,32 +61,37 @@ void Game::dice_animation() {
     if(dice_timer > 0)
         dice_timer--;
     switch(dice_timer){
-        case 60:
+        case 90:
             dice_text.setString("Dice roll: [.]");
             break;
-        case 55:
+        case 85:
             dice_text.setString("Dice roll: [..]");
             break;
-        case 50:
+        case 80:
             dice_text.setString("Dice roll: [...]");
             break;
-        case 45:
+        case 75:
             dice_text.setString("Dice roll: " + std::to_string(dice1));
             break;
-        case 35:
+        case 65:
             dice_text.setString("Dice roll: " + std::to_string(dice1) + " [.]");
             break;
-        case 30:
+        case 60:
             dice_text.setString("Dice roll: " + std::to_string(dice1) + " [..]");
             break;
-        case 25:
+        case 55:
             dice_text.setString("Dice roll: " + std::to_string(dice1) + " [...]");
             break;
-        case 20:
+        case 50:
             dice_text.setString("Dice roll: " + std::to_string(dice1) + " " + std::to_string(dice2));
             break;
-        case 5:
+        case 40:
             dice_text.setString("Dice roll: " + std::to_string(dice1 + dice2));
+            b_final.outline_tiles(dice1 + dice2);
+            outline_timer = 130;
+            break;
+        case 1:
+            dice_effects();
             break;
     }
 }

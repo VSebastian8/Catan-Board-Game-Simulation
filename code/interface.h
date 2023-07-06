@@ -12,7 +12,7 @@ class Game{
     sf::Text dice_text;
     int dice1;
     int dice2;
-    int dice_timer;
+    int dice_timer, outline_timer;
     int turn_speed, roll_speed, transaction_speed;
     int generation_timer = 0;
     sf::Text animation_text;
@@ -32,6 +32,7 @@ public:
         dice1 = 0;
         dice2 = 0;
         dice_timer = 0;
+        outline_timer = 0;
         turn_speed = 25; //(numar secunde) / 30fps
         roll_speed = 200;
         transaction_speed = 100;
@@ -55,6 +56,7 @@ public:
     void transaction(Player&, const std::string&, const std::vector<int>&);
     void roll_dice();
     void dice_animation();
+    void dice_effects();
     static void calculate_win(std::vector<Player>&);
     void make_turn(Player& p);
     void check_input(int&);
@@ -85,9 +87,9 @@ void Game::run() {
     Legend<sf::RectangleShape> lg_road(window, "Road", 60, 20);
     lg_road.init(1280, 900);
 
-    bool animate_board = false, animate_generation = false;
+    bool animate_board = true, animate_generation = true;
     if (!animation_font.loadFromFile( "assets/georgia_bold.ttf"))    {
-        rlutil::setColor(rlutil::WHITE);
+        rlutil::resetColor();
         throw font_error("georgia bold");
     }
     animation_text.setFont(animation_font);
@@ -127,7 +129,8 @@ void Game::run() {
             lg_road.show();
 
             b_final.show(window);
-            dice_animation();
+            if(!paused)
+                dice_animation();
             window->draw(dice_text);
 
             for(auto p : players) {
@@ -137,6 +140,11 @@ void Game::run() {
             check_input(cooldown);
             if(time < 50000 && !paused)
                 time++;
+            if(outline_timer > 0 && !paused){
+                outline_timer--;
+                if(outline_timer == 0)
+                    b_final.outline_tiles(-1);
+            }
             window->display();
         }
     }
@@ -217,10 +225,12 @@ void Game::initialize_dice_text() {
 void Game::roll_dice() {
     static std::random_device rd;
     std::uniform_int_distribution<int> dist(1, 6);
-
     dice1 = dist(rd);
     dice2 = dist(rd);
-    dice_timer = 61;
+    dice_timer = 100;
+}
+
+void Game::dice_effects(){
     auto important_points = b_final.rolled_dice(dice1 + dice2);
     for(const auto& element : important_points){
         for(const auto& building : buildings)

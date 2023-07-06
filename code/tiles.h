@@ -17,7 +17,7 @@ protected:
     sf::Color disk_color;
     sf::Text text;
     sf::Font font;
-    int outline_timer;
+    bool outlined;
 
     virtual void print() const {
         std::cout << name << " gives you: " << resource << "\n";
@@ -31,14 +31,14 @@ public:
         square.setSize(dim);
         disk.setOrigin(disk_dim);
         disk.setRadius(disk_width);
-        outline_timer = 0;
+        outlined = false;
         initialize_text();
     }
     Tile(std::string name, std::string res): name(std::move(name)), resource(std::move(res)),
         x(-1), y(-1), width(25), disk_width(8), dim(sf::Vector2f(25, 25)), disk_dim(sf::Vector2f(8, 8)),
         dice_roll(0), x_offset(0), y_offset(0), adjacent_points(std::vector<std::pair<int, int>>()),
         poz(sf::Vector2f((float)x * width, (float)y * width)), color(sf::Color(0,0,0)),
-        disk_color(sf::Color(220, 220, 220)), outline_timer(0){}
+        disk_color(sf::Color(220, 220, 220)), outlined(false){}
     virtual ~Tile() = default;
     friend std::ostream& operator <<(std::ostream& out, const Tile& tile) {
         tile.print();
@@ -68,30 +68,27 @@ public:
     int get_dice_value() const {return dice_roll;}
     void set_dice_value(int score){
         dice_roll = score;
-        text.setString(std::to_string((int)dice_roll));
+        text.setString(std::to_string(dice_roll));
     }
     virtual sf::Text show_dice_value(){
         if(dice_roll < 2 || dice_roll > 12)
             return {};
-        disk.setOutlineThickness(0);
-        if(outline_timer > 0){
-            outline_timer--;
-            if(outline_timer < 230) {
-                disk.setOutlineThickness(3);
-            }
+        if(outlined){
+            disk.setOutlineThickness(3);
+            disk.setOutlineColor(sf::Color(181, 112, 230));
         }
-        disk.setOutlineColor(sf::Color(181, 112, 230));
+        else
+            disk.setOutlineThickness(0);
+
         text.setFillColor(color);
         return text;
     }
     void outline_disk(int dice){
-        if(dice_roll == dice) {
-            outline_timer = 280;
-        }
+        outlined = (dice_roll == dice);
     }
     virtual void calculate_points(int d){
         if(x <= 0 || y <= 0 || x >= d || y >= d)
-            throw tile_bounds("(" + std::to_string((int)x) + ", " + std::to_string((int)y) + ")");
+            throw tile_bounds("(" + std::to_string(x) + ", " + std::to_string(y) + ")");
         adjacent_points = {std::pair<int, int>(x - 1, y - 1), std::pair<int, int>(x, y - 1),
                             std::pair<int, int>(x - 1, y), std::pair<int, int>(x, y)};
     }
@@ -104,13 +101,16 @@ public:
 };
 
 void Tile::initialize_text(){
-    if (!font.loadFromFile( "assets/georgia_bold.ttf" )){
-        rlutil::setColor(rlutil::WHITE);
-        throw font_error("georgia bold");
+    if (!font.loadFromFile( "assets/courier_prime_bold.ttf" )){
+        rlutil::resetColor();
+        throw font_error("courier prime bold");
     }
     text.setFont(font);
-    text.setOrigin(0.1f * width, 0.15f * width);
-    text.setString(std::to_string((int)dice_roll));
+    if(dice_roll < 10)
+        text.setOrigin(0.07f * width, 0.16f * width);
+    else
+        text.setOrigin(0.13f * width, 0.16f * width);
+    text.setString(std::to_string(dice_roll));
     text.setCharacterSize((unsigned int)(24 * width / 100));
     text.setPosition(x_offset + (float)x * width + width / 2, y_offset + (float)y * width + width / 2);
 }

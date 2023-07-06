@@ -21,6 +21,7 @@ public:
     void animate(sf::RenderWindow*, bool&);
     void show(sf::RenderWindow* w);
     std::vector<std::pair<std::pair<int, int>, std::string>> rolled_dice(int);
+    void outline_tiles(int);
     Board& operator |=(const Board&);
     Board& operator =(const Board&);
     Board(const Board& other);
@@ -166,9 +167,16 @@ std::vector<std::pair<std::pair<int, int>, std::string>> Board::rolled_dice(int 
     std::vector<std::pair<std::pair<int, int>, std::string>> data;
     for(int i = 0; i < dimension; i++){
         for(int j = 0; j < dimension; j++){
-            tiles[i][j]->outline_disk(dice);
             tiles[i][j]->parse_points(data, dice);
         }
     }
     return data;
+}
+
+void Board::outline_tiles(int dice) {
+    for(int i = 0; i < dimension; i++){
+        for(int j = 0; j < dimension; j++){
+            tiles[i][j]->outline_disk(dice);
+        }
+    }
 }
