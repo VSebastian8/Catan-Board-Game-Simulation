@@ -96,7 +96,7 @@ endif()
 ###############################################################################
 
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
-add_executable(${PROJECT_NAME} main.cpp code/tiles.h code/board.h code/interface.h code/errors.h code/structures.h code/player.h code/legend.h code/tiles.cpp code/board.cpp code/player.cpp code/structures.cpp code/legend.cpp code/interface.cpp code/demo.cpp code/animations.cpp)
+add_executable(${PROJECT_NAME} main.cpp code/tiles.h code/board.h code/interface.h code/errors.h code/structures.h code/player.h code/legend.h code/tiles.cpp code/board.cpp code/player.cpp code/structures.cpp code/interface.cpp code/demo.cpp code/animations.cpp)
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE ext)
 
 ###############################################################################
