@@ -1,7 +1,11 @@
+#include "interface.h"
+#include <fstream>
+#include "rlutil.h"
+
 void Game::init_demo() {
-// instruction_type
-// turn 0 roll 1
-// transaction_town 2 transaction_city 3 transaction_road 4
+    // instruction_type
+    // turn 0 roll 1
+    // transaction_town 2 transaction_city 3 transaction_road 4
 
     std::ifstream data;
     data.open("assets/demo.txt");

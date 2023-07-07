@@ -1,4 +1,5 @@
-#pragma once
+#include "interface.h"
+#include "board.h"
 
 void Game::show_generation(bool& animate_generation) {
     window->clear();

@@ -1,4 +1,11 @@
-#pragma once
+#ifndef OOP_PLAYER_H
+#define OOP_PLAYER_H
+
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <memory>
 
 class Structure;
 class Player{
@@ -13,59 +20,19 @@ class Player{
     sf::Font info_font;
     std::vector<std::shared_ptr<Structure>> structures;
 public:
-    explicit Player(std::string nm = "?", const std::vector<int>& res = {3, 4, 2, 7, 3}): name(std::move(nm)), player_number(++player_count),
-                                           score(0), color(player_colors[player_number]), turn(false), resources(res){}
+    explicit Player(std::string nm = "?", const std::vector<int>& res = {3, 4, 2, 7, 3});
     ~Player() = default;
-    friend std::ostream& operator <<(std::ostream& out, const Player& p);
+    friend std::ostream& operator <<(std::ostream&, const Player&);
     sf::Text show();
-    void set_turn(const bool value){
-        turn = value;
-    }
-    std::vector<int> get_resources() const{
-        return resources;
-    }
-    int get_score() const{
-        return score;
-    }
-    void add_structure(const std::shared_ptr<Structure>& s){
-        structures.push_back(s);
-        score++;
-    }
-    void decrease_res(int index, int count){
-        resources[index] -= count;
-    }
-    void increase_res(int index, int count){
-        resources[index] += count;
-    }
+    void set_turn(bool);
+    std::vector<int> get_resources() const;
+    int get_score() const;
+    void add_structure(const std::shared_ptr<Structure>&);
+    void increase_res(int, int);
+    void decrease_res(int, int);
     void show_structures(sf::RenderWindow*);
     bool town_at(int, int);
     bool connects_to(int, int, int, int);
 };
-int Player::player_count = 0;
-std::vector<sf::Color> Player::player_colors = {sf::Color(227, 230, 193),
-                       sf::Color(72, 23, 179), sf::Color(212, 23, 74), sf::Color(27, 209, 164)};
 
-sf::Text Player::show() {
-    if (!info_font.loadFromFile( "assets/georgia_bold.ttf")){
-        rlutil::setColor(rlutil::WHITE);
-        throw font_error("georgia bold");
-    }
-    info.setFont(info_font);
-    info.setString("Player " + std::to_string(player_number) + " - " + name + " [brick: " + std::to_string(resources[0]) +
-                   ", sheep: " + std::to_string(resources[1]) + ", hay: " + std::to_string(resources[2]) + ", wood: " + std::to_string(resources[3]) +
-                   ", rock: " + std::to_string(resources[4]) + "]   Score: " + std::to_string(score));
-    info.setPosition(100, (float)(20 + 30 * player_number));
-    info.setCharacterSize(20);
-    if(turn)
-        info.setFillColor(color);
-    else
-        info.setFillColor(player_colors[0]);
-    return info;
-}
-
-std::ostream &operator<<(std::ostream &out, const Player &p) {
-    rlutil::setColor(rlutil::WHITE);
-    out << "Player " << p.player_number << " - " << p.name << "  Won!\n";
-    rlutil::resetColor();
-    return out;
-}
+#endif
