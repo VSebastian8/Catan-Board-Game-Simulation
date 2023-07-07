@@ -21,7 +21,7 @@ public:
 };
 class resource_error: public game_error{
 public:
-    explicit resource_error(const std::string& str, const std::string& res): game_error("Not enough resources for " + str + ", need more " + res){};
+    explicit resource_error(const std::string& str, const std::string& res, const std::string& player = ""): game_error(player + "Not enough resources for " + str + ", need more " + res){};
 };
 
 class bad_placement: public game_error{

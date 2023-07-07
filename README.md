@@ -1,5 +1,5 @@
-# Tema 1 - Honey Clicker
-# Tema 2 - Catran (Catan patrat)
+## Tema 1 - Honey Clicker
+## Tema 2 - Catran (Catan patrat)
 
 ### Tema 0
 
@@ -11,7 +11,7 @@
   - Avem diferite tipuri de spatii(tiles) care ofera jucatorilor diferite resurse.
   - Fiecare jucator poate cumpara structuri de 3 tipuri: oras, drum(intre 2 puncte adiacente) si cetate(plasata peste un oras, il inlocuieste pe acesta)
   - La fiecare structura cumparata, jucatorul primeste un punct
-  - Fiecare jucator da cu zarul, iar acele tiles cu numarul de pe zaruri produc resursa lor respectiva. Toti jucatorii care au un oras(+1) sau o cetate(+2) intr-un colt acelui tile, primesc resursa.
+  - Fiecare jucator da cu zarul, iar acele tiles cu numarul de pe zaruri produc resursa lor respectiva. Toti jucatorii care au un oras(+1) sau o cetate(+2) intr-un colt al acelui tile, primesc resursa.
   - Am implementat functionalitatea pentru acest board-game si am realizat un demo cu desfasurarea a catorva runde (+consola cu informatii utile si mesaje pentru erori)
 
 ## Tema 1
@@ -60,6 +60,12 @@
 - [x] o clasă șablon cu sens; minim 2 instanțieri
   - [x] o specializare pe funcție/clasă șablon
 - [x] tag de `git`: de exemplu `v0.3` sau `v1.0`
+
+##
+
+![example](assets/game_example.png)
+
+![example](assets/console_example.png)
 
 ## Resurse
 

@@ -3,37 +3,52 @@ transaction Town 5 5
 turn 1
 transaction City 4 3
 transaction Road 4 3 4 4
+transaction Town 4 1
 turn 2
 transaction Town 3 2
 transaction Road 2 2 3 2
 turn 0
 transaction City 5 5
+transaction Road 5 5 5 4
 roll
-transaction Road 1 3 2 3
 turn 1
 transaction Town 4 3
 roll
 turn 2
-transaction City 1 3
 transaction Road 1 3 2 4
+transaction Road 2 2 2 3
 roll
 transaction Town 2 4
+transaction Road 2 3 2 4
 turn 0
 transaction Town 4 6
 roll
-transaction Road 5 5 5 4
 turn 1
+transaction Town 0 5
+transaction Road 4 1 4 2
 transaction Town 2 5
 roll
 turn 2
+transaction Town 3 6
 roll
-transaction City 3 2
 turn 0
 roll
+transaction Road 6 4 5 4
 transaction Road 2 6 2 5
 turn 1
 roll
 transaction City 4 3
+turn 2
+roll
+transaction Town 2 3
+transaction City 3 2
+turn 0
+roll
+transaction Town 6 4
+transaction Road 6 3 2 5
+turn 1
+roll
+transaction Road 4 3 4 2
 turn 2
 transaction Road 1 4 2 4
 roll
@@ -41,9 +56,25 @@ transaction City 3 2
 turn 0
 roll
 transaction Town 2 1
+transaction Town 6 4
+transaction City 3 6
 turn 1
 roll
-transaction Road 5 2 6 2
+transaction Road 1 3 2 3
+transaction Town 1 5
+turn 2
+roll
+transaction City 2 3
+transaction Road 3 2 4 2
+turn 0
+roll
+transaction Road 6 4 6 3
+turn 1
+roll
+transaction Road 4 3 3 3
 transaction Town 4 1
+transaction City 4 3
 turn 2
 transaction Road 1 3 1 4
+transaction Town 6 4
+roll

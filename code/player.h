@@ -26,6 +26,7 @@ public:
     sf::Text show();
     void set_turn(bool);
     std::vector<int> get_resources() const;
+    std::string get_name() const;
     int get_score() const;
     void add_structure(const std::shared_ptr<Structure>&);
     void increase_res(int, int);

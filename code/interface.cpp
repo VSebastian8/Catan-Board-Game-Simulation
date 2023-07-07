@@ -45,7 +45,7 @@ void Game::run() {
     init_demo();
     int cooldown = 0;
 
-    Legend<double> lg_exit(window, "The demo is done now. You can exit whenever you're ready.", 70.8);
+    Legend<double> lg_exit(window, "The demo is done now. You can exit whenever you're ready.", 61.5);
     lg_exit.init(500, 175);
     Legend<sf::CircleShape> lg_town(window, "Town", 12.5);
     lg_town.init(1280, 800);
@@ -75,12 +75,14 @@ void Game::run() {
         }
         if(animate_generation){
             //-board generation
-            show_generation(animate_generation);
+            if(!paused)
+                show_generation(animate_generation);
             window->display();
         }
         else if(animate_board){
             //--board animation
-            b_final.animate(window, animate_board);
+            if(!paused)
+                b_final.animate(window, animate_board);
             window->display();
         }
         else{
@@ -104,7 +106,6 @@ void Game::run() {
                 p.show_structures(window);
                 window->draw(p.show());
             }
-            check_input(cooldown);
             if(time < 50000 && !paused)
                 time++;
             if(outline_timer > 0 && !paused){
@@ -114,6 +115,7 @@ void Game::run() {
             }
             window->display();
         }
+        check_input(cooldown);
     }
 }
 
@@ -143,7 +145,6 @@ void Game::check_spots(const int& x, const int& y) {
 }
 
 void Game::transaction(Player &p, const std::string& type, const std::vector<int>& list) {
-    rlutil::setColor(rlutil::LIGHTRED);
     try{
         if(!on_board(list))
             throw bad_placement("Structure coordinates outside of the board");
@@ -169,9 +170,11 @@ void Game::transaction(Player &p, const std::string& type, const std::vector<int
             buildings.push_back(std::weak_ptr<Settlement>(sb));
     }
     catch(resource_error& err){
+        rlutil::setColor(rlutil::LIGHTCYAN);
         std::cout << err.what() << "\n";
     }
     catch(bad_placement& err){
+        rlutil::setColor(rlutil::LIGHTRED);
         std::cout << err.what() << "\n";
     }
     rlutil::resetColor();

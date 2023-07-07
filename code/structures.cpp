@@ -50,13 +50,13 @@ void Town::purchase(Player& p) {
     //cost 1 brick, 1 sheep, 1 hay, 1 wood
     auto resources = p.get_resources();
     if(resources[0] < 1)
-        throw resource_error("Town", "bricks");
+        throw resource_error("Town", "bricks", p.get_name() + ": ");
     if(resources[1] < 1)
-        throw resource_error("Town", "sheep");
+        throw resource_error("Town", "sheep", p.get_name() + ": ");
     if(resources[2] < 1)
-        throw resource_error("Town", "hay");
+        throw resource_error("Town", "hay", p.get_name() + ": ");
     if(resources[3] < 1)
-        throw resource_error("Town", "wood");
+        throw resource_error("Town", "wood", p.get_name() + ": ");
     p.decrease_res(0, 1);
     p.decrease_res(1, 1);
     p.decrease_res(2, 1);
@@ -82,9 +82,9 @@ void City::purchase(Player& p) {
     //cost 2 sheep, 3 rock
     auto resources = p.get_resources();
     if(resources[1] < 2)
-        throw resource_error("City", "sheep");
+        throw resource_error("City", "sheep", p.get_name() + ": ");
     if(resources[4] < 3)
-        throw resource_error("City", "rocks");
+        throw resource_error("City", "rocks", p.get_name() + ": ");
     if(!p.town_at(place.first, place.second))
         throw lonely_city();
     p.decrease_res(1, 2);
@@ -125,9 +125,9 @@ void Road::purchase(Player& p) {
         throw unconnected_road();
     auto resources = p.get_resources();
     if(resources[0] < 1)
-        throw resource_error("Road", "bricks");
+        throw resource_error("Road", "bricks", p.get_name() + ": ");
     if(resources[3] < 1)
-        throw resource_error("Road", "wood");
+        throw resource_error("Road", "wood", p.get_name() + ": ");
     p.decrease_res(0, 1);
     p.decrease_res(3, 1);
     owner = &p;

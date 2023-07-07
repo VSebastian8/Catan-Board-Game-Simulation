@@ -40,6 +40,9 @@ void Player::set_turn(const bool value) {
 std::vector<int> Player::get_resources() const {
     return resources;
 }
+std::string Player::get_name() const {
+    return name;
+}
 int Player::get_score() const {
     return score;
 }
